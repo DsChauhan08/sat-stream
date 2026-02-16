@@ -67,9 +67,9 @@ pub fn render(frame: &mut Frame, app: &App, area: Rect) {
             4,
         ),
         (
-            "📚 Import PDF Questions",
-            "Scan for PDFs".to_string(),
-            "Enter to scan │ extracts from books in working dir",
+            "🤖 Import PDF Questions (AI)",
+            "Ollama + Qwen2.5:1.5b".to_string(),
+            "Enter to extract │ requires: ollama serve",
             5,
         ),
         (

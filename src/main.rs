@@ -504,18 +504,44 @@ async fn handle_settings_keys(app: &mut App, pool: &sqlx::SqlitePool, key: KeyCo
                     app.config.timed_mode = !app.config.timed_mode;
                     let _ = app.config.save();
                 }
-                5 => {                        // Import from PDFs
-                    // Look for PDFs in the project directory
+                5 => {                        // Import from PDFs (AI)
                     let cwd = std::env::current_dir()
                         .unwrap_or_else(|_| std::path::PathBuf::from("."));
                     let cwd_str = cwd.to_string_lossy().to_string();
-                    app.set_status("⏳ Scanning PDFs for questions...");
-                    match pdf_extract::extract_from_directory(pool, &cwd_str).await {
-                        Ok(count) => {
-                            app.set_status(&format!("✓ Extracted {} questions from PDFs!", count));
-                        }
-                        Err(e) => {
-                            app.set_status(&format!("✗ PDF error: {}", e));
+
+                    // Check for PDFs first
+                    let pdf_count = std::fs::read_dir(&cwd_str)
+                        .map(|entries| entries
+                            .filter_map(|e| e.ok())
+                            .filter(|e| e.path().extension()
+                                .map(|ext| ext.to_ascii_lowercase() == "pdf")
+                                .unwrap_or(false))
+                            .count())
+                        .unwrap_or(0);
+
+                    if pdf_count == 0 {
+                        app.set_status("✗ No PDF files found in current directory");
+                    } else {
+                        app.set_status(&format!("⏳ Found {} PDFs — extracting with AI (Qwen2.5:1.5b)...", pdf_count));
+
+                        match pdf_extract::extract_from_directory(pool, &cwd_str).await {
+                            Ok(count) => {
+                                let total = db::question_count(pool).await.unwrap_or(0);
+                                app.set_status(&format!(
+                                    "✓ Extracted {} new questions! Total: {}",
+                                    count, total
+                                ));
+                            }
+                            Err(e) => {
+                                let msg = e.to_string();
+                                if msg.contains("Ollama is not running") {
+                                    app.set_status("✗ Start Ollama first: ollama serve && ollama pull qwen2.5:1.5b");
+                                } else if msg.contains("not found") {
+                                    app.set_status("✗ Run: ollama pull qwen2.5:1.5b");
+                                } else {
+                                    app.set_status(&format!("✗ {}", msg));
+                                }
+                            }
                         }
                     }
                 }
