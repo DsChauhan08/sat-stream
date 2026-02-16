@@ -217,21 +217,19 @@ pub async fn get_daily_activity(pool: &SqlitePool, days: i64) -> Result<Vec<Dail
 pub async fn get_overall_stats(pool: &SqlitePool) -> Result<(i64, i64, i64)> {
     let row = sqlx::query(
         "SELECT COUNT(*) as total, \
-         COALESCE(SUM(is_correct), 0) as correct, \
-         COALESCE(MAX(streak), 0) as best_streak \
-         FROM (SELECT is_correct, \
-         SUM(CASE WHEN is_correct = 0 THEN 1 ELSE 0 END) OVER (ORDER BY answered_at) as grp \
-         FROM user_progress) sub \
-         LEFT JOIN (SELECT COUNT(*) as streak FROM user_progress \
-         WHERE is_correct = 1 GROUP BY 1) s ON 1=1"
+         COALESCE(SUM(is_correct), 0) as correct \
+         FROM user_progress"
     )
     .fetch_optional(pool)
     .await?;
 
-    match row {
-        Some(r) => Ok((r.get("total"), r.get("correct"), 0)),
-        None => Ok((0, 0, 0)),
-    }
+    let (total, correct) = match row {
+        Some(r) => (r.get::<i64, _>("total"), r.get::<i64, _>("correct")),
+        None => (0, 0),
+    };
+
+    let streak = get_current_streak(pool).await.unwrap_or(0);
+    Ok((total, correct, streak))
 }
 
 /// Get current streak
