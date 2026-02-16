@@ -6,3 +6,4 @@ pub mod models;
 pub mod seed;
 pub mod ai;
 pub mod ui;
+pub mod pdf_extract;

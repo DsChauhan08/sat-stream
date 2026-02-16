@@ -15,6 +15,12 @@ pub enum Screen {
     Help,
 }
 
+/// What the text input is targeting
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum InputTarget {
+    ApiKey,
+}
+
 /// Visual feedback state for answer animation
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Feedback {
@@ -73,6 +79,16 @@ pub struct App {
     pub mode_selector_open: bool,
     pub mode_selected: usize,
 
+    // Text input state (for API key, etc.)
+    pub input_active: bool,
+    pub input_buffer: String,
+    pub input_label: String,
+    pub input_target: InputTarget,
+
+    // Status message (shown briefly at bottom)
+    pub status_message: Option<String>,
+    pub status_timer: u8,
+
     // Ticker for animations
     pub tick: u64,
 }
@@ -122,6 +138,14 @@ impl App {
             mode_selector_open: false,
             mode_selected: 0,
 
+            input_active: false,
+            input_buffer: String::new(),
+            input_label: String::new(),
+            input_target: InputTarget::ApiKey,
+
+            status_message: None,
+            status_timer: 0,
+
             tick: 0,
         }
     }
@@ -157,6 +181,23 @@ impl App {
         self.screen = screen;
         self.ai_response = None;
         self.ai_scroll = 0;
+    }
+
+    pub fn open_input(&mut self, label: &str, target: InputTarget, prefill: &str) {
+        self.input_active = true;
+        self.input_label = label.to_string();
+        self.input_target = target;
+        self.input_buffer = prefill.to_string();
+    }
+
+    pub fn close_input(&mut self) {
+        self.input_active = false;
+        self.input_buffer.clear();
+    }
+
+    pub fn set_status(&mut self, msg: &str) {
+        self.status_message = Some(msg.to_string());
+        self.status_timer = 90; // ~3 seconds at 30fps
     }
 }
 

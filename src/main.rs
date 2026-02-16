@@ -6,8 +6,9 @@ mod models;
 mod seed;
 mod ai;
 mod ui;
+mod pdf_extract;
 
-use app::{App, Feedback, PersistedState, Screen};
+use app::{App, Feedback, InputTarget, PersistedState, Screen};
 use config::Config;
 use engine::QuizMode;
 use models::Answer;
@@ -110,6 +111,42 @@ async fn run_app(
                     app.running = false;
                 }
 
+                // Text input mode — intercept all keys
+                if app.input_active {
+                    match key.code {
+                        KeyCode::Esc => {
+                            app.close_input();
+                        }
+                        KeyCode::Enter => {
+                            let value = app.input_buffer.clone();
+                            let target = app.input_target;
+                            app.close_input();
+                            match target {
+                                InputTarget::ApiKey => {
+                                    if value.trim().is_empty() {
+                                        app.config.gemini_api_key = None;
+                                        app.ai_client = ai::AiClient::new(None);
+                                        app.set_status("✓ API key cleared");
+                                    } else {
+                                        app.config.gemini_api_key = Some(value.trim().to_string());
+                                        app.ai_client = ai::AiClient::new(app.config.gemini_api_key.clone());
+                                        app.set_status("✓ API key saved — AI features enabled!");
+                                    }
+                                    let _ = app.config.save();
+                                }
+                            }
+                        }
+                        KeyCode::Backspace => {
+                            app.input_buffer.pop();
+                        }
+                        KeyCode::Char(c) => {
+                            app.input_buffer.push(c);
+                        }
+                        _ => {}
+                    }
+                    continue;
+                }
+
                 match key.code {
                     // Number keys for quick navigation
                     KeyCode::Char('1') if !matches!(app.screen, Screen::Quiz if !app.answered) => {
@@ -144,7 +181,7 @@ async fn run_app(
                             Screen::Quiz => handle_quiz_keys(app, pool, key.code).await,
                             Screen::Stats => handle_stats_keys(app, key.code),
                             Screen::Review => handle_review_keys(app, key.code),
-                            Screen::Settings => handle_settings_keys(app, key.code),
+                            Screen::Settings => handle_settings_keys(app, pool, key.code).await,
                             Screen::Help => handle_help_keys(app, key.code),
                         }
                     }
@@ -161,6 +198,14 @@ async fn run_app(
                 app.feedback_timer -= 1;
                 if app.feedback_timer == 0 {
                     app.feedback = Feedback::None;
+                }
+            }
+
+            // Status message countdown
+            if app.status_timer > 0 {
+                app.status_timer -= 1;
+                if app.status_timer == 0 {
+                    app.status_message = None;
                 }
             }
 
@@ -436,7 +481,7 @@ fn handle_review_keys(app: &mut App, key: KeyCode) {
     }
 }
 
-fn handle_settings_keys(app: &mut App, key: KeyCode) {
+async fn handle_settings_keys(app: &mut App, pool: &sqlx::SqlitePool, key: KeyCode) {
     match key {
         KeyCode::Up | KeyCode::Char('k') => {
             if app.settings_selected > 0 {
@@ -444,15 +489,65 @@ fn handle_settings_keys(app: &mut App, key: KeyCode) {
             }
         }
         KeyCode::Down | KeyCode::Char('j') => {
-            if app.settings_selected < 5 {
+            if app.settings_selected < 6 {
                 app.settings_selected += 1;
             }
         }
         KeyCode::Enter => {
             match app.settings_selected {
                 0 => app.cycle_theme(),       // Theme
-                2 => {
+                1 => {                        // API Key
+                    let current = app.config.gemini_api_key.clone().unwrap_or_default();
+                    app.open_input("Gemini API Key", InputTarget::ApiKey, &current);
+                }
+                2 => {                        // Timed mode toggle
                     app.config.timed_mode = !app.config.timed_mode;
+                    let _ = app.config.save();
+                }
+                5 => {                        // Import from PDFs
+                    // Look for PDFs in the project directory
+                    let cwd = std::env::current_dir()
+                        .unwrap_or_else(|_| std::path::PathBuf::from("."));
+                    let cwd_str = cwd.to_string_lossy().to_string();
+                    app.set_status("⏳ Scanning PDFs for questions...");
+                    match pdf_extract::extract_from_directory(pool, &cwd_str).await {
+                        Ok(count) => {
+                            app.set_status(&format!("✓ Extracted {} questions from PDFs!", count));
+                        }
+                        Err(e) => {
+                            app.set_status(&format!("✗ PDF error: {}", e));
+                        }
+                    }
+                }
+                6 => {                        // Questions per session
+                }
+                _ => {}
+            }
+        }
+        KeyCode::Left | KeyCode::Right => {
+            match app.settings_selected {
+                3 => {  // Math time
+                    if key == KeyCode::Left {
+                        app.config.math_time_per_question_secs = app.config.math_time_per_question_secs.saturating_sub(5).max(30);
+                    } else {
+                        app.config.math_time_per_question_secs = (app.config.math_time_per_question_secs + 5).min(300);
+                    }
+                    let _ = app.config.save();
+                }
+                4 => {  // English time
+                    if key == KeyCode::Left {
+                        app.config.english_time_per_question_secs = app.config.english_time_per_question_secs.saturating_sub(5).max(30);
+                    } else {
+                        app.config.english_time_per_question_secs = (app.config.english_time_per_question_secs + 5).min(300);
+                    }
+                    let _ = app.config.save();
+                }
+                6 => {  // Questions per session
+                    if key == KeyCode::Left {
+                        app.config.questions_per_session = app.config.questions_per_session.saturating_sub(5).max(5);
+                    } else {
+                        app.config.questions_per_session = (app.config.questions_per_session + 5).min(100);
+                    }
                     let _ = app.config.save();
                 }
                 _ => {}
