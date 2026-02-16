@@ -68,8 +68,8 @@ pub fn render(frame: &mut Frame, app: &App, area: Rect) {
         ),
         (
             "🤖 Import PDF Questions (AI)",
-            "Ollama + Qwen2.5:1.5b".to_string(),
-            "Enter to extract │ requires: ollama serve",
+            "pdftotext + llama.cpp".to_string(),
+            "Enter to extract │ needs: llama-cli + .gguf model",
             5,
         ),
         (

@@ -522,25 +522,18 @@ async fn handle_settings_keys(app: &mut App, pool: &sqlx::SqlitePool, key: KeyCo
                     if pdf_count == 0 {
                         app.set_status("✗ No PDF files found in current directory");
                     } else {
-                        app.set_status(&format!("⏳ Found {} PDFs — extracting with AI (Qwen2.5:1.5b)...", pdf_count));
+                        app.set_status(&format!("⏳ Found {} PDFs — extracting with llama.cpp...", pdf_count));
 
                         match pdf_extract::extract_from_directory(pool, &cwd_str).await {
-                            Ok(count) => {
+                            Ok((count, summary)) => {
                                 let total = db::question_count(pool).await.unwrap_or(0);
                                 app.set_status(&format!(
-                                    "✓ Extracted {} new questions! Total: {}",
-                                    count, total
+                                    "✓ {} new questions (total: {}) — {}",
+                                    count, total, summary
                                 ));
                             }
                             Err(e) => {
-                                let msg = e.to_string();
-                                if msg.contains("Ollama is not running") {
-                                    app.set_status("✗ Start Ollama first: ollama serve && ollama pull qwen2.5:1.5b");
-                                } else if msg.contains("not found") {
-                                    app.set_status("✗ Run: ollama pull qwen2.5:1.5b");
-                                } else {
-                                    app.set_status(&format!("✗ {}", msg));
-                                }
+                                app.set_status(&format!("✗ {}", e));
                             }
                         }
                     }
