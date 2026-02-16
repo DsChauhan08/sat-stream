@@ -1,0 +1,17 @@
+# Build artifacts
+/target/
+*.db
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# User data (don't commit local config)
+state.json
+
+# PDFs (too large for git)
+*.pdf

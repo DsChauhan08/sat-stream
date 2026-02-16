@@ -1,0 +1,54 @@
+[package]
+name = "sat-stream"
+version = "0.1.0"
+edition = "2021"
+authors = ["Regulus"]
+description = "A premium SAT prep TUI with infinite question streaming, domain tracking, and AI-powered learning"
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/regulus/sat-stream"
+repository = "https://github.com/regulus/sat-stream"
+
+[[bin]]
+name = "sat-stream"
+path = "src/main.rs"
+
+[dependencies]
+ratatui = { version = "0.29", features = ["crossterm"] }
+crossterm = "0.28"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sqlx = { version = "0.8", features = ["runtime-tokio", "sqlite"] }
+reqwest = { version = "0.12", features = ["json"] }
+tokio = { version = "1", features = ["full"] }
+color-eyre = "0.6"
+chrono = { version = "0.4", features = ["serde"] }
+dirs = "6"
+clap = { version = "4", features = ["derive"] }
+toml = "0.8"
+rand = "0.8"
+unicode-width = "0.2"
+
+[profile.release]
+opt-level = 3
+lto = true
+strip = true
+codegen-units = 1
+
+[package.metadata.deb]
+maintainer = "Regulus"
+copyright = "2026"
+license-file = ["LICENSE", "0"]
+extended-description = "A premium terminal-based SAT prep application featuring infinite question streaming across all SAT domains, spaced repetition, performance analytics with heatmap visualization, timed practice modes, and AI-powered hints via Gemini API."
+section = "education"
+priority = "optional"
+assets = [
+    ["target/release/sat-stream", "usr/bin/", "755"],
+    ["README.md", "usr/share/doc/sat-stream/", "644"],
+]
+
+[package.metadata.generate-rpm]
+assets = [
+    { source = "target/release/sat-stream", dest = "/usr/bin/sat-stream", mode = "755" },
+    { source = "README.md", dest = "/usr/share/doc/sat-stream/README.md", mode = "644" },
+]
