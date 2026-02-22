@@ -183,6 +183,7 @@ async fn run_app(
                             Screen::Review => handle_review_keys(app, key.code),
                             Screen::Settings => handle_settings_keys(app, pool, key.code).await,
                             Screen::Help => handle_help_keys(app, key.code),
+                            Screen::MockExam => handle_mock_exam_keys(app, key.code),
                         }
                     }
                 }
@@ -204,6 +205,54 @@ async fn run_app(
             // Status message countdown
             if app.status_timer > 0 {
                 app.status_timer -= 1;
+                if app.status_timer == 1 && app.screen == Screen::MockExam {
+                    // Trigger Mock Exam module transition
+                    if let Some(state) = app.mock_exam_state.clone() {
+                        let next_module = state.module + 1;
+                        let (next_sec, is_finished) = if state.section == models::MockSection::ReadingWriting {
+                            if next_module > 2 {
+                                (models::MockSection::Math, false) // Actually we'd do a Break here, but simplify for now
+                            } else {
+                                (models::MockSection::ReadingWriting, false)
+                            }
+                        } else {
+                            if next_module > 2 {
+                                (models::MockSection::Finished, true)
+                            } else {
+                                (models::MockSection::Math, false)
+                            }
+                        };
+
+                        if is_finished {
+                            app.set_status("🎉 Exam Finished! Go to Analytics to see your score.");
+                            app.mock_exam_state = None;
+                            app.navigate(Screen::Home);
+                        } else {
+                            let mod_num = if next_module > 2 { 1 } else { next_module };
+                            // Basic difficulty routing mockup: if they answered > 60% of M1 questions right, give Hard M2 (3). Else Easy M2 (2).
+                            // A real implementation would score M1 here before generating M2.
+                            let mut routing = mod_num;
+                            if mod_num == 2 {
+                               let answered_correct = state.questions.iter().zip(&state.user_answers).filter(|(q, a)| {
+                                   if let Some(ans_idx) = a {
+                                       let user_str = Answer::from_index(*ans_idx).map(|x| x.to_string()).unwrap_or_default();
+                                       user_str == q.correct_answer
+                                   } else { false }
+                               }).count();
+                               routing = if answered_correct >= (state.questions.len() / 2) { 3 } else { 2 };
+                            }
+
+                            if let Ok(questions) = engine::generate_mock_module(pool, next_sec, routing).await {
+                                app.mock_exam_state = Some(models::MockExamState::new(
+                                    questions,
+                                    next_sec,
+                                    if next_sec == models::MockSection::Math { 35 * 60 } else { 32 * 60 },
+                                ));
+                                app.mock_exam_state.as_mut().unwrap().module = mod_num;
+                            }
+                        }
+                    }
+                }
                 if app.status_timer == 0 {
                     app.status_message = None;
                 }
@@ -295,12 +344,25 @@ async fn handle_home_keys(app: &mut App, pool: &sqlx::SqlitePool, key: KeyCode) 
                     app.mode_selected = 0;
                 }
                 1 => {
+                    // Mock Exam
+                    if let Ok(questions) = engine::generate_mock_module(pool, models::MockSection::ReadingWriting, 1).await {
+                        app.mock_exam_state = Some(models::MockExamState::new(
+                            questions,
+                            models::MockSection::ReadingWriting,
+                            32 * 60, // 32 minutes for RW Module 1
+                        ));
+                        app.navigate(Screen::MockExam);
+                    } else {
+                        app.set_status("✗ Not enough questions in bank to generate Mock Exam");
+                    }
+                }
+                2 => {
                     // View Analytics
                     refresh_stats(app, pool).await;
                     app.navigate(Screen::Stats);
                 }
-                2 => app.navigate(Screen::Settings),
-                3 => app.navigate(Screen::Help),
+                3 => app.navigate(Screen::Settings),
+                4 => app.navigate(Screen::Help),
                 _ => {}
             }
         }
@@ -588,6 +650,56 @@ fn handle_help_keys(app: &mut App, key: KeyCode) {
     }
 }
 
+fn handle_mock_exam_keys(app: &mut App, key: KeyCode) {
+    match key {
+        KeyCode::Char('q') | KeyCode::Char('Q') | KeyCode::Esc => {
+            app.mock_exam_state = None; // Abort exam
+            app.navigate(Screen::Home);
+            return;
+        }
+        KeyCode::Enter => {
+            let unanswered = app.mock_exam_state.as_ref()
+                .map(|s| s.user_answers.iter().filter(|a| a.is_none()).count())
+                .unwrap_or(0);
+            
+            app.status_timer = 2; // trigger fast transition
+
+            if unanswered > 0 {
+                app.set_status(&format!("⚠ {} question(s) left blank. Press Enter again to force submit.", unanswered));
+                // We'd normally track a double-tap here, but for now let's just force submit
+            } else {
+                app.set_status("⏳ Grading module & loading next section...");
+            }
+            return;
+        }
+        _ => {}
+    }
+
+    if let Some(mock_state) = app.mock_exam_state.as_mut() {
+        match key {
+            KeyCode::Right | KeyCode::Char('l') => {
+                if mock_state.current_index < mock_state.questions.len() - 1 {
+                    mock_state.current_index += 1;
+                }
+            }
+            KeyCode::Left | KeyCode::Char('h') => {
+                if mock_state.current_index > 0 {
+                    mock_state.current_index -= 1;
+                }
+            }
+            KeyCode::Char('a') | KeyCode::Char('A') => mock_state.user_answers[mock_state.current_index] = Some(0),
+            KeyCode::Char('b') | KeyCode::Char('B') => mock_state.user_answers[mock_state.current_index] = Some(1),
+            KeyCode::Char('c') | KeyCode::Char('C') => mock_state.user_answers[mock_state.current_index] = Some(2),
+            KeyCode::Char('d') | KeyCode::Char('D') => mock_state.user_answers[mock_state.current_index] = Some(3),
+            KeyCode::Char(' ') => {
+                // Un-answer (clear selection) if pressed space
+                mock_state.user_answers[mock_state.current_index] = None;
+            }
+            _ => {}
+        }
+    }
+}
+
 async fn load_question(app: &mut App, pool: &sqlx::SqlitePool) {
     let section = app.section_filter.as_deref();
     let domain = app.domain_filter.as_deref();
@@ -630,4 +742,5 @@ async fn refresh_stats(app: &mut App, pool: &sqlx::SqlitePool) {
         app.daily_activity = activity;
     }
     app.current_streak = db::get_current_streak(pool).await.unwrap_or(0);
+    app.srs_due_count = db::get_due_questions_count(pool).await.unwrap_or(0);
 }

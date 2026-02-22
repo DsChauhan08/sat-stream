@@ -276,24 +276,16 @@ fn is_valid_question(q: &ExtractedQuestion) -> bool {
 // ─── Chunking ──────────────────────────────────────────────────────────
 
 /// Split text into chunks, breaking at question boundaries when possible
-fn split_into_chunks(text: &str, max_chars: usize) -> Vec<String> {
+/// Split text into chunks based on page breaks (form feeds)
+fn split_into_chunks(text: &str, _max_chars: usize) -> Vec<String> {
     let mut chunks = Vec::new();
-    let mut current = String::new();
 
-    // Try to split at paragraph or question-number boundaries
-    for paragraph in text.split("\n\n") {
-        if current.len() + paragraph.len() > max_chars && !current.is_empty() {
-            chunks.push(current.clone());
-            current.clear();
+    // Split by form feed (page break)
+    for page in text.split('\u{000C}') {
+        let cleaned = page.trim();
+        if !cleaned.is_empty() {
+            chunks.push(cleaned.to_string());
         }
-        if !current.is_empty() {
-            current.push_str("\n\n");
-        }
-        current.push_str(paragraph);
-    }
-
-    if !current.is_empty() {
-        chunks.push(current);
     }
 
     chunks
@@ -335,12 +327,25 @@ pub async fn extract_from_pdf(pool: &SqlitePool, path: &str, config: &ExtractCon
         .unwrap_or("Unknown PDF")
         .to_string();
 
-    let chunks = split_into_chunks(&text, 1800);
+    // Check for image-based PDFs
+    if text.trim().len() < 1000 && std::fs::metadata(path).map(|m| m.len() > 1_000_000).unwrap_or(false) {
+        eprintln!("  ⚠ Warning: {} appears to be an image scan (very little text extracted). OCR needed.", source);
+        return Ok(0);
+    }
+
+    let chunks = split_into_chunks(&text, 2000);
     let mut total = 0;
 
-    for chunk in chunks.iter() {
-        if chunk.len() < 80 || is_likely_noise(chunk) {
+    println!("  • Found {} text pages/chunks to process...", chunks.len());
+
+    for (i, chunk) in chunks.iter().enumerate() {
+        if chunk.len() < 50 || is_likely_noise(chunk) {
             continue;
+        }
+
+        // Processing indicator (every 5 chunks)
+        if i % 5 == 0 {
+            println!("  [{} / {}] Processing chunk {}/{}...", source, i + 1, i + 1, chunks.len());
         }
 
         let prompt = build_prompt(chunk, &source);
@@ -350,6 +355,7 @@ pub async fn extract_from_pdf(pool: &SqlitePool, path: &str, config: &ExtractCon
                 let questions = parse_json_response(&response);
                 for q in &questions {
                     if is_valid_question(q) {
+                        println!("  ✔ Found question: {}", q.question.chars().take(60).collect::<String>());
                         let _ = db::insert_question(
                             pool,
                             &q.section,
@@ -369,7 +375,13 @@ pub async fn extract_from_pdf(pool: &SqlitePool, path: &str, config: &ExtractCon
                     }
                 }
             }
-            Err(_) => continue,
+            Err(e) => {
+                // Ignore silent errors, but log if major
+                if !e.to_string().contains("llama-cli") {
+                   eprintln!("  ⚠ Llama error on chunk {}: {}", i, e);
+                }
+                continue;
+            }
         }
     }
 
@@ -393,12 +405,18 @@ pub async fn extract_from_directory(pool: &SqlitePool, dir: &str) -> Result<(usi
         if let Some(ext) = path.extension() {
             if ext.to_ascii_lowercase() == "pdf" {
                 let path_str = path.to_string_lossy().to_string();
+                println!("📄 Extracting from: {}", path.file_name().unwrap().to_string_lossy());
+                
                 match extract_from_pdf(pool, &path_str, &config).await {
                     Ok(count) => {
+                        println!("  ✨ extraction complete: {} questions found", count);
                         total += count;
                         processed += 1;
                     }
-                    Err(_) => continue,
+                    Err(e) => {
+                        eprintln!("  ❌ Failed: {}", e);
+                        continue;
+                    }
                 }
             }
         }
@@ -408,6 +426,7 @@ pub async fn extract_from_directory(pool: &SqlitePool, dir: &str) -> Result<(usi
 }
 
 /// Check system readiness: pdftotext, llama-cli, model
+#[allow(dead_code)]
 pub fn check_readiness() -> Vec<(String, bool, String)> {
     let mut checks = Vec::new();
 

@@ -1,7 +1,7 @@
 use ratatui::{
     layout::{Constraint, Direction, Layout, Rect, Alignment},
-    style::{Color, Modifier, Style},
-    text::{Line, Span, Text},
+    style::{Modifier, Style},
+    text::{Line, Span},
     widgets::{Block, Borders, Paragraph, Padding, List, ListItem},
     Frame,
 };
@@ -63,6 +63,7 @@ pub fn render(frame: &mut Frame, app: &App, area: Rect) {
     // Menu items
     let menu_items = vec![
         ("🚀", "Start Quiz", "Begin an infinite stream of SAT questions"),
+        ("⏱️ ", "Mock Exam", "Take a full-length digital SAT simulation"),
         ("📊", "View Analytics", "See your performance dashboard & heatmap"),
         ("⚙️ ", "Settings", "Configure themes, API keys, and preferences"),
         ("❓", "Help", "View all keyboard shortcuts"),
@@ -82,7 +83,7 @@ pub fn render(frame: &mut Frame, app: &App, area: Rect) {
             };
 
             let pointer = if selected { " ▶ " } else { "   " };
-            let bg = if selected { theme.surface() } else { theme.bg() };
+            let _bg = if selected { theme.surface() } else { theme.bg() };
 
             ListItem::new(vec![
                 Line::from(vec![

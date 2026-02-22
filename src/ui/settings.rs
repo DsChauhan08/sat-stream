@@ -2,7 +2,7 @@ use ratatui::{
     layout::{Constraint, Direction, Layout, Rect, Alignment},
     style::{Modifier, Style},
     text::{Line, Span},
-    widgets::{Block, Borders, Paragraph, Padding, List, ListItem, Clear, Wrap},
+    widgets::{Block, Borders, Paragraph, Padding, List, ListItem, Clear},
     Frame,
 };
 use crate::app::App;

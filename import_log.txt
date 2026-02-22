@@ -1,0 +1,115 @@
+   Compiling sat-stream v0.1.0 (/home/regulus/Programs/sattie)
+warning: unused import: `AiResponse`
+ --> src/app.rs:1:27
+  |
+1 | use crate::ai::{AiClient, AiResponse};
+  |                           ^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `Answer`
+ --> src/app.rs:4:21
+  |
+4 | use crate::models::{Answer, DailyActivity, DomainStats, Question};
+  |                     ^^^^^^
+
+warning: unused import: `SpacedRepCard`
+ --> src/db.rs:3:59
+  |
+3 | use crate::models::{Question, DomainStats, DailyActivity, SpacedRepCard};
+  |                                                           ^^^^^^^^^^^^^
+
+warning: unused import: `Domain`
+ --> src/engine.rs:1:31
+  |
+1 | use crate::models::{Question, Domain};
+  |                               ^^^^^^
+
+warning: unused import: `rand::seq::SliceRandom`
+ --> src/engine.rs:5:5
+  |
+5 | use rand::seq::SliceRandom;
+  |     ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `color_eyre::Result`
+ --> src/ai.rs:1:5
+  |
+1 | use color_eyre::Result;
+  |     ^^^^^^^^^^^^^^^^^^
+
+warning: unused imports: `Color` and `Text`
+ --> src/ui/home.rs:3:13
+  |
+3 |     style::{Color, Modifier, Style},
+  |             ^^^^^
+4 |     text::{Line, Span, Text},
+  |                        ^^^^
+
+warning: unused imports: `Alignment` and `Color`
+ --> src/ui/quiz.rs:2:51
+  |
+2 |     layout::{Constraint, Direction, Layout, Rect, Alignment},
+  |                                                   ^^^^^^^^^
+3 |     style::{Color, Modifier, Style},
+  |             ^^^^^
+
+warning: unused imports: `Alignment` and `BarChart`
+ --> src/ui/stats.rs:2:51
+  |
+2 |     layout::{Constraint, Direction, Layout, Rect, Alignment},
+  |                                                   ^^^^^^^^^
+...
+5 |     widgets::{Block, Borders, Paragraph, Padding, BarChart, Wrap},
+  |                                                   ^^^^^^^^
+
+warning: unused import: `Wrap`
+ --> src/ui/settings.rs:5:74
+  |
+5 |     widgets::{Block, Borders, Paragraph, Padding, List, ListItem, Clear, Wrap},
+  |                                                                          ^^^^
+
+warning: unused import: `Color`
+ --> src/ui/mod.rs:8:13
+  |
+8 |     style::{Color, Modifier, Style},
+  |             ^^^^^
+
+warning: unused variable: `bg`
+  --> src/ui/home.rs:85:17
+   |
+85 |             let bg = if selected { theme.surface() } else { theme.bg() };
+   |                 ^^ help: if this is intentional, prefix it with an underscore: `_bg`
+   |
+   = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `theme`
+   --> src/ui/stats.rs:146:9
+    |
+146 |     let theme = app.theme();
+    |         ^^^^^ help: if this is intentional, prefix it with an underscore: `_theme`
+
+warning: `sat-stream` (lib) generated 13 warnings (run `cargo fix --lib -p sat-stream` to apply 13 suggestions)
+warning: unused variable: `ok`
+  --> src/bin/import_pdfs.rs:46:28
+   |
+46 |                 for (name, ok, msg) in checks {
+   |                            ^^ help: if this is intentional, prefix it with an underscore: `_ok`
+   |
+   = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: `sat-stream` (bin "import_pdfs") generated 1 warning (run `cargo fix --bin "import_pdfs" -p sat-stream` to apply 1 suggestion)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 3.70s
+     Running `target/debug/import_pdfs`
+📚 SAT-Stream Batch PDF Importer
+=================================
+• Database: "/home/regulus/.local/share/sat-stream/sat-stream.db"
+• Initial question count: 120
+• Scanning directory: "/home/regulus/Programs/sattie"
+
+🚀 Starting AI extraction (this may take a while)...
+   Using: pdftotext + llama.cpp (Qwen2.5-1.5B)
+📄 Extracting from: College Panda SAT Math.pdf
+  ⚠ Warning: College Panda SAT Math appears to be an image scan (very little text extracted). OCR needed.
+  ✨ extraction complete: 0 questions found
+📄 Extracting from: Princeton Review Digital SAT Prep Premium.pdf
+  • Found 882 text pages/chunks to process...

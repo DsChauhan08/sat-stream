@@ -1,8 +1,8 @@
 use ratatui::{
-    layout::{Constraint, Direction, Layout, Rect, Alignment},
+    layout::{Constraint, Direction, Layout, Rect},
     style::{Color, Modifier, Style},
     text::{Line, Span},
-    widgets::{Block, Borders, Paragraph, Padding, BarChart, Wrap},
+    widgets::{Block, Borders, Paragraph, Padding, Wrap},
     Frame,
 };
 use crate::app::App;
@@ -43,10 +43,16 @@ pub fn render(frame: &mut Frame, app: &App, area: Rect) {
                 theme.warning()
             }),
         ),
-        Span::styled("  │  ", Style::default().fg(theme.dim())),
         Span::styled(
             format!("🔥 Best streak: {}", app.best_streak),
             Style::default().fg(theme.secondary()),
+        ),
+        Span::styled("  │  ", Style::default().fg(theme.dim())),
+        Span::styled(
+            format!("🧠 SRS Due: {}", app.srs_due_count),
+            Style::default()
+                .fg(if app.srs_due_count > 0 { theme.warning() } else { theme.dim() })
+                .add_modifier(Modifier::BOLD),
         ),
     ]));
     frame.render_widget(title, chunks[0]);
@@ -143,7 +149,7 @@ fn render_heatmap(frame: &mut Frame, app: &App, area: Rect) {
 }
 
 fn render_domain_breakdown(frame: &mut Frame, app: &App, area: Rect) {
-    let theme = app.theme();
+    let _theme = app.theme();
 
     let chunks = Layout::default()
         .direction(Direction::Horizontal)

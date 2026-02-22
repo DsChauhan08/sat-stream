@@ -1,8 +1,8 @@
-use crate::models::{Question, Domain};
+use crate::models::Question;
 use crate::db;
 use color_eyre::Result;
 use sqlx::SqlitePool;
-use rand::seq::SliceRandom;
+
 
 /// Quiz engine modes
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -81,7 +81,7 @@ pub async fn next_question(
     }
 }
 
-/// Calculate incorrectness rating for a domain
+#[allow(dead_code)]
 pub fn incorrectness_rating(wrong: i64, attempted: i64, difficulty_weight: f64) -> f64 {
     if attempted == 0 {
         return 0.0;
@@ -89,7 +89,7 @@ pub fn incorrectness_rating(wrong: i64, attempted: i64, difficulty_weight: f64) 
     (wrong as f64 / attempted as f64) * difficulty_weight
 }
 
-/// Get domain suggestions based on performance
+#[allow(dead_code)]
 pub async fn get_weak_domains(pool: &SqlitePool) -> Result<Vec<(String, f64)>> {
     let stats = db::get_domain_stats(pool).await?;
     let mut domains: Vec<(String, f64)> = stats
@@ -105,6 +105,103 @@ pub async fn get_weak_domains(pool: &SqlitePool) -> Result<Vec<(String, f64)>> {
         })
         .collect();
 
+
     domains.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap_or(std::cmp::Ordering::Equal));
     Ok(domains)
+}
+
+/// Generate a Mock Exam module
+pub async fn generate_mock_module(
+    pool: &SqlitePool,
+    section: crate::models::MockSection,
+    module: u8,
+) -> Result<Vec<Question>> {
+    let section_str = match section {
+        crate::models::MockSection::ReadingWriting => "english",
+        crate::models::MockSection::Math => "math",
+        _ => return Err(color_eyre::eyre::eyre!("Invalid section for module generation")),
+    };
+
+    let count = match section {
+        crate::models::MockSection::ReadingWriting => 27,
+        crate::models::MockSection::Math => 22,
+        _ => 0,
+    };
+
+    // Module 1 is always a mix of easy, medium, and hard.
+    // Module 2 is adaptive based on the passed module parameter (1=Init, 2=Easy, 3=Hard)
+    let difficulty_filter = match module {
+        1 => "difficulty IN (1, 2, 3)", // Broad mix
+        2 => "difficulty IN (1, 2)",    // Easy routing
+        3 => "difficulty IN (2, 3)",    // Hard routing
+        _ => "difficulty IN (1, 2, 3)",
+    };
+
+    let query = format!(
+        "SELECT id, section, domain, sub_domain, source, difficulty, \
+         question_text, option_a, option_b, option_c, option_d, \
+         correct_answer, explanation FROM questions \
+         WHERE section = '{}' AND {} \
+         ORDER BY RANDOM() LIMIT {}",
+        section_str, difficulty_filter, count
+    );
+
+    let rows = sqlx::query_as::<_, db::QuestionRow>(&query)
+        .fetch_all(pool)
+        .await?;
+
+    if rows.len() < count as usize {
+        return Err(color_eyre::eyre::eyre!("Not enough questions in database"));
+    }
+
+    Ok(rows.into_iter().map(|r| r.into()).collect())
+}
+
+#[allow(dead_code)]
+pub fn calculate_scaled_score(
+    _section: crate::models::MockSection,
+    m1_questions: &[Question],
+    m1_answers: &[Option<usize>],
+    m2_questions: &[Question],
+    m2_answers: &[Option<usize>],
+) -> u16 {
+    let mut raw_points = 0.0;
+    let mut max_points = 0.0;
+
+    // Helper to score a module
+    let mut score_module = |qs: &[Question], ans: &[Option<usize>]| {
+        for (i, q) in qs.iter().enumerate() {
+            let weight = match q.difficulty {
+                1 => 0.8,
+                2 => 1.0,
+                3 => 1.2,
+                _ => 1.0,
+            };
+            max_points += weight;
+            
+            if let Some(user_idx) = ans.get(i).copied().flatten() {
+                let user_str = crate::models::Answer::from_index(user_idx)
+                    .map(|a| a.to_string())
+                    .unwrap_or_default();
+                if user_str == q.correct_answer {
+                    raw_points += weight;
+                }
+            }
+        }
+    };
+
+    score_module(m1_questions, m1_answers);
+    score_module(m2_questions, m2_answers);
+
+    if max_points == 0.0 {
+        return 200;
+    }
+
+    let percentage: f64 = raw_points / max_points;
+    
+    // Scale 200 to 800
+    let scaled: f64 = 200.0 + (percentage * 600.0);
+    
+    // Round to nearest 10
+    (scaled / 10.0).round() as u16 * 10
 }

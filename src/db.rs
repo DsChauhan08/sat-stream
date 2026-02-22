@@ -1,12 +1,25 @@
 use color_eyre::Result;
 use sqlx::{sqlite::SqlitePoolOptions, SqlitePool, Row};
-use crate::models::{Question, DomainStats, DailyActivity, SpacedRepCard};
+use std::io::Read;
+use flate2::read::GzDecoder;
+use crate::models::{Question, DomainStats, DailyActivity};
 
 /// Initialize database: create file, run migrations, return pool
 pub async fn init_db(db_path: &str) -> Result<SqlitePool> {
     // Ensure parent directory exists
     if let Some(parent) = std::path::Path::new(db_path).parent() {
         std::fs::create_dir_all(parent)?;
+    }
+
+    let db_exists = std::path::Path::new(db_path).exists();
+    if !db_exists {
+        // Decompress embedded database and write to disk
+        let compressed_db = include_bytes!("../data/seed.db.gz");
+        let mut decoder = GzDecoder::new(&compressed_db[..]);
+        let mut decompressed_data = Vec::new();
+        decoder.read_to_end(&mut decompressed_data)?;
+        std::fs::write(db_path, decompressed_data)?;
+        println!("Decompressed and installed offline database from binary.");
     }
 
     let url = format!("sqlite:{}?mode=rwc", db_path);
@@ -86,6 +99,17 @@ pub async fn get_due_questions(pool: &SqlitePool, limit: i64) -> Result<Vec<Ques
     .await?;
 
     Ok(rows.into_iter().map(|r| r.into()).collect())
+}
+
+/// Get number of questions due for spaced repetition review
+pub async fn get_due_questions_count(pool: &SqlitePool) -> Result<i64> {
+    let row = sqlx::query(
+        "SELECT COUNT(*) as cnt FROM spaced_repetition WHERE next_review <= datetime('now')"
+    )
+    .fetch_one(pool)
+    .await?;
+
+    Ok(row.get::<i64, _>("cnt"))
 }
 
 /// Record an answer
@@ -323,8 +347,8 @@ pub async fn insert_question(
 
 // Internal helper struct for sqlx deserialization
 #[derive(sqlx::FromRow)]
-struct QuestionRow {
-    id: i64,
+pub struct QuestionRow {
+    pub id: i64,
     section: String,
     domain: String,
     sub_domain: String,

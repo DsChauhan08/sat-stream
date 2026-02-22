@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
-/// SAT section: Math or English (Reading & Writing)
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Hash)]
+#[allow(dead_code)]
 pub enum Section {
     Math,
     English,
@@ -36,8 +36,8 @@ impl std::fmt::Display for Section {
     }
 }
 
-/// SAT content domains
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, Hash)]
+#[allow(dead_code)]
 pub enum Domain {
     // English domains
     CraftAndStructure,
@@ -160,8 +160,8 @@ impl Question {
     }
 }
 
-/// User's answer record
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[allow(dead_code)]
 pub struct UserProgress {
     pub id: i64,
     pub question_id: i64,
@@ -170,8 +170,8 @@ pub struct UserProgress {
     pub answered_at: String,
 }
 
-/// Domain performance stats
 #[derive(Debug, Clone, Default)]
+#[allow(dead_code)]
 pub struct DomainStats {
     pub domain: String,
     pub total_attempted: i64,
@@ -181,15 +181,15 @@ pub struct DomainStats {
 }
 
 /// Daily activity for heatmap
-#[derive(Debug, Clone)]
+#[allow(dead_code)]
 pub struct DailyActivity {
     pub date: String,
     pub questions_answered: i64,
     pub correct: i64,
 }
 
-/// Spaced repetition card state
 #[derive(Debug, Clone)]
+#[allow(dead_code)]
 pub struct SpacedRepCard {
     pub question_id: i64,
     pub ease_factor: f64,
@@ -198,8 +198,8 @@ pub struct SpacedRepCard {
     pub next_review: String,
 }
 
-/// Study session record
 #[derive(Debug, Clone)]
+#[allow(dead_code)]
 pub struct StudySession {
     pub id: i64,
     pub start_time: String,
@@ -242,5 +242,43 @@ impl Answer {
 impl std::fmt::Display for Answer {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", self.as_str())
+    }
+}
+
+/// SAT Mock Exam Section tracking
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum MockSection {
+    ReadingWriting,
+    Math,
+    Break,
+    Finished,
+}
+
+/// Tracking for a full mock exam session
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct MockExamState {
+    pub section: MockSection,
+    pub module: u8, // 1 or 2
+    pub questions: Vec<Question>,
+    pub user_answers: Vec<Option<usize>>, // None if skipped/unanswered
+    pub current_index: usize,
+    pub time_remaining_secs: u64,
+    pub rw_score: Option<u16>,
+    pub math_score: Option<u16>,
+}
+
+impl MockExamState {
+    pub fn new(questions: Vec<Question>, section: MockSection, duration_secs: u64) -> Self {
+        let len = questions.len();
+        Self {
+            section,
+            module: 1,
+            questions,
+            user_answers: vec![None; len],
+            current_index: 0,
+            time_remaining_secs: duration_secs,
+            rw_score: None,
+            math_score: None,
+        }
     }
 }

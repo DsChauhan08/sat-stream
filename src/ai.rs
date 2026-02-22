@@ -1,4 +1,3 @@
-use color_eyre::Result;
 use serde::{Deserialize, Serialize};
 
 /// Gemini AI client for hints, explanations, and question generation
@@ -61,6 +60,7 @@ impl AiClient {
         }
     }
 
+    #[allow(dead_code)]
     pub fn is_configured(&self) -> bool {
         self.api_key.is_some()
     }
@@ -101,6 +101,7 @@ impl AiClient {
     }
 
     /// Generate similar practice questions
+    #[allow(dead_code)]
     pub async fn generate_questions(
         &self,
         domain: &str,

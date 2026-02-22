@@ -1,7 +1,7 @@
-use crate::ai::{AiClient, AiResponse};
+use crate::ai::AiClient;
 use crate::config::{Config, Theme};
 use crate::engine::QuizMode;
-use crate::models::{Answer, DailyActivity, DomainStats, Question};
+use crate::models::{DailyActivity, DomainStats, Question};
 use serde::{Deserialize, Serialize};
 
 /// Current application screen
@@ -13,6 +13,7 @@ pub enum Screen {
     Review,
     Settings,
     Help,
+    MockExam,
 }
 
 /// What the text input is targeting
@@ -58,6 +59,12 @@ pub struct App {
     // Timed mode
     pub time_remaining_secs: Option<u64>,
     pub question_start_time: Option<std::time::Instant>,
+
+    // Mock Exam state
+    pub mock_exam_state: Option<crate::models::MockExamState>,
+
+    // SRS
+    pub srs_due_count: i64,
 
     // Stats data (cached)
     pub domain_stats: Vec<DomainStats>,
@@ -121,6 +128,9 @@ impl App {
 
             time_remaining_secs: None,
             question_start_time: None,
+
+            mock_exam_state: None,
+            srs_due_count: 0,
 
             domain_stats: Vec::new(),
             daily_activity: Vec::new(),
@@ -210,6 +220,7 @@ pub struct PersistedState {
     pub domain_filter: Option<String>,
     pub session_questions: i64,
     pub session_correct: i64,
+    pub mock_exam_state: Option<crate::models::MockExamState>,
 }
 
 impl PersistedState {
@@ -221,6 +232,7 @@ impl PersistedState {
             domain_filter: app.domain_filter.clone(),
             session_questions: app.session_questions,
             session_correct: app.session_correct,
+            mock_exam_state: app.mock_exam_state.clone(),
         };
         let path = Config::state_path();
         if let Some(parent) = path.parent() {

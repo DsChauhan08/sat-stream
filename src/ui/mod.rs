@@ -2,10 +2,11 @@ pub mod home;
 pub mod quiz;
 pub mod stats;
 pub mod settings;
+pub mod mock_exam;
 
 use ratatui::{
     layout::{Constraint, Direction, Layout, Rect},
-    style::{Color, Modifier, Style},
+    style::{Modifier, Style},
     text::{Line, Span},
     widgets::{Block, Borders, Paragraph, Padding},
     Frame,
@@ -39,6 +40,7 @@ pub fn render(frame: &mut Frame, app: &App) {
         Screen::Review => stats::render_review(frame, app, chunks[1]),
         Screen::Settings => settings::render(frame, app, chunks[1]),
         Screen::Help => render_help(frame, app, chunks[1]),
+        Screen::MockExam => mock_exam::render(frame, app, chunks[1]),
     }
 
     render_footer(frame, app, chunks[2]);
@@ -54,6 +56,7 @@ fn render_header(frame: &mut Frame, app: &App, area: Rect) {
         Screen::Review => "Review",
         Screen::Settings => "Settings",
         Screen::Help => "Help",
+        Screen::MockExam => "Mock Exam",
     };
 
     let mode_name = app.quiz_mode.name();
@@ -148,6 +151,9 @@ fn render_footer(frame: &mut Frame, app: &App, area: Rect) {
         ],
         Screen::Help => vec![
             ("Q", "Back"),
+        ],
+        Screen::MockExam => vec![
+            ("A-D", "Answer"), ("↑↓", "Navigate Questions"), ("Space", "Mark for Review"), ("Enter", "Submit Module"), ("Q", "Quit Exam"),
         ],
     };
 
