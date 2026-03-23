@@ -1,17 +1,17 @@
 pub mod home;
-pub mod quiz;
-pub mod stats;
-pub mod settings;
 pub mod mock_exam;
+pub mod quiz;
+pub mod settings;
+pub mod stats;
 
+use crate::app::{App, Screen};
 use ratatui::{
     layout::{Constraint, Direction, Layout, Rect},
     style::{Modifier, Style},
     text::{Line, Span},
-    widgets::{Block, Borders, Paragraph, Padding},
+    widgets::{Block, Borders, Padding, Paragraph},
     Frame,
 };
-use crate::app::{App, Screen};
 
 /// Main render function dispatches to the correct screen
 pub fn render(frame: &mut Frame, app: &App) {
@@ -25,14 +25,14 @@ pub fn render(frame: &mut Frame, app: &App) {
     let chunks = Layout::default()
         .direction(Direction::Vertical)
         .constraints([
-            Constraint::Length(3),    // Header
-            Constraint::Min(1),       // Content
-            Constraint::Length(3),    // Footer
+            Constraint::Length(3), // Header
+            Constraint::Min(1),    // Content
+            Constraint::Length(3), // Footer
         ])
         .split(frame.area());
 
     render_header(frame, app, chunks[0]);
-    
+
     match app.screen {
         Screen::Home => home::render(frame, app, chunks[1]),
         Screen::Quiz => quiz::render(frame, app, chunks[1]),
@@ -48,7 +48,7 @@ pub fn render(frame: &mut Frame, app: &App) {
 
 fn render_header(frame: &mut Frame, app: &App, area: Rect) {
     let theme = app.theme();
-    
+
     let screen_name = match app.screen {
         Screen::Home => "Home",
         Screen::Quiz => "Quiz",
@@ -79,10 +79,7 @@ fn render_header(frame: &mut Frame, app: &App, area: Rect) {
                 .add_modifier(Modifier::BOLD),
         ),
         Span::styled(" │ ", Style::default().fg(theme.dim())),
-        Span::styled(
-            screen_name,
-            Style::default().fg(theme.text()),
-        ),
+        Span::styled(screen_name, Style::default().fg(theme.text())),
         Span::styled(" │ ", Style::default().fg(theme.dim())),
         Span::styled(
             format!("Mode: {}", mode_name),
@@ -108,14 +105,13 @@ fn render_header(frame: &mut Frame, app: &App, area: Rect) {
         ),
     ];
 
-    let header = Paragraph::new(Line::from(header_text))
-        .block(
-            Block::default()
-                .borders(Borders::BOTTOM)
-                .border_style(Style::default().fg(theme.accent()))
-                .padding(Padding::horizontal(1))
-                .style(Style::default().bg(theme.surface())),
-        );
+    let header = Paragraph::new(Line::from(header_text)).block(
+        Block::default()
+            .borders(Borders::BOTTOM)
+            .border_style(Style::default().fg(theme.accent()))
+            .padding(Padding::horizontal(1))
+            .style(Style::default().bg(theme.surface())),
+    );
 
     frame.render_widget(header, area);
 }
@@ -125,35 +121,44 @@ fn render_footer(frame: &mut Frame, app: &App, area: Rect) {
 
     let keys = match app.screen {
         Screen::Home => vec![
-            ("↑↓", "Navigate"), ("Enter", "Select"), ("Q", "Quit"), ("?", "Help"),
+            ("↑↓", "Navigate"),
+            ("Enter", "Select"),
+            ("Q", "Quit"),
+            ("?", "Help"),
         ],
         Screen::Quiz => {
             if app.answered {
                 vec![
-                    ("Enter", "Next"), ("E", "Explain (AI)"), ("R", "Review"),
+                    ("Enter", "Next Question"),
+                    ("E", "AI Explain"),
+                    ("R", "Review"),
                     ("Q", "Home"),
                 ]
             } else {
                 vec![
-                    ("A-D", "Answer"), ("↑↓", "Select"), ("Enter", "Submit"),
-                    ("H", "Hint (AI)"), ("S", "Skip"), ("Q", "Home"),
+                    ("A-D", "Select"),
+                    ("↑↓", "Move"),
+                    ("Enter", "Submit Answer"),
+                    ("H", "AI Hint"),
+                    ("Q", "Home"),
                 ]
             }
         }
-        Screen::Stats => vec![
-            ("↑↓", "Scroll"), ("R", "Review Wrong"), ("Q", "Home"),
-        ],
-        Screen::Review => vec![
-            ("↑↓", "Scroll"), ("Q", "Back"),
-        ],
+        Screen::Stats => vec![("↑↓", "Scroll"), ("R", "Review Wrong"), ("Q", "Home")],
+        Screen::Review => vec![("↑↓", "Scroll"), ("Q", "Back")],
         Screen::Settings => vec![
-            ("↑↓", "Navigate"), ("Enter", "Toggle"), ("T", "Theme"), ("Q", "Home"),
+            ("↑↓", "Navigate"),
+            ("Enter", "Toggle"),
+            ("T", "Theme"),
+            ("Q", "Home"),
         ],
-        Screen::Help => vec![
-            ("Q", "Back"),
-        ],
+        Screen::Help => vec![("Q", "Back")],
         Screen::MockExam => vec![
-            ("A-D", "Answer"), ("↑↓", "Navigate Questions"), ("Space", "Mark for Review"), ("Enter", "Submit Module"), ("Q", "Quit Exam"),
+            ("A-D", "Answer"),
+            ("↑↓", "Navigate Questions"),
+            ("Space", "Mark for Review"),
+            ("Enter", "Submit Module"),
+            ("Q", "Quit Exam"),
         ],
     };
 
@@ -169,10 +174,7 @@ fn render_footer(frame: &mut Frame, app: &App, area: Rect) {
                         .bg(theme.accent())
                         .add_modifier(Modifier::BOLD),
                 ),
-                Span::styled(
-                    format!(" {} ", action),
-                    Style::default().fg(theme.text()),
-                ),
+                Span::styled(format!(" {} ", action), Style::default().fg(theme.text())),
             ];
             if i < keys.len() - 1 {
                 v.push(Span::styled(" │ ", Style::default().fg(theme.dim())));
@@ -181,14 +183,13 @@ fn render_footer(frame: &mut Frame, app: &App, area: Rect) {
         })
         .collect();
 
-    let footer = Paragraph::new(Line::from(spans))
-        .block(
-            Block::default()
-                .borders(Borders::TOP)
-                .border_style(Style::default().fg(theme.accent()))
-                .padding(Padding::horizontal(1))
-                .style(Style::default().bg(theme.surface())),
-        );
+    let footer = Paragraph::new(Line::from(spans)).block(
+        Block::default()
+            .borders(Borders::TOP)
+            .border_style(Style::default().fg(theme.accent()))
+            .padding(Padding::horizontal(1))
+            .style(Style::default().bg(theme.surface())),
+    );
 
     frame.render_widget(footer, area);
 }
@@ -197,66 +198,80 @@ fn render_help(frame: &mut Frame, app: &App, area: Rect) {
     let theme = app.theme();
 
     let help_items = vec![
-        ("Navigation", vec![
-            ("↑ / ↓ / k / j", "Navigate menus / Select answer"),
-            ("Enter", "Confirm selection / Submit answer"),
-            ("1-5", "Quick navigate (Home/Quiz/Stats/Settings/Help)"),
-            ("Q / Esc", "Go back / Quit from home"),
-        ]),
-        ("Quiz Controls", vec![
-            ("A / B / C / D", "Select answer directly"),
-            ("H", "Get AI hint (requires Gemini API key)"),
-            ("S", "Skip current question"),
-            ("E", "Get AI explanation (after answering)"),
-            ("M", "Change quiz mode"),
-        ]),
-        ("General", vec![
-            ("T", "Cycle color theme"),
-            ("K", "Set Gemini API key"),
-            ("?", "Show this help screen"),
-            ("Ctrl+C", "Force quit"),
-        ]),
+        (
+            "Navigation",
+            vec![
+                ("↑ / ↓ / k / j", "Navigate menus / Select answer"),
+                ("Enter", "Confirm selection / Submit answer"),
+                ("1-5", "Quick navigate (Home/Quiz/Stats/Settings/Help)"),
+                ("Q / Esc", "Go back / Quit from home"),
+            ],
+        ),
+        (
+            "Quiz Controls",
+            vec![
+                ("A / B / C / D", "Select answer directly"),
+                ("↑ / ↓", "Move selection up/down"),
+                ("Enter", "Submit answer / Next question"),
+                ("H", "Get AI hint (requires Gemini API key)"),
+                ("E", "Get AI explanation (after answering)"),
+                ("M", "Change quiz mode"),
+            ],
+        ),
+        (
+            "General",
+            vec![
+                ("T", "Cycle color theme"),
+                ("K", "Set Gemini API key"),
+                ("?", "Show this help screen"),
+                ("Ctrl+C", "Force quit"),
+            ],
+        ),
     ];
 
     let mut lines: Vec<Line> = Vec::new();
     lines.push(Line::from(""));
-    lines.push(Line::from(vec![
-        Span::styled(
-            "  ⌨️  Keyboard Shortcuts",
-            Style::default()
-                .fg(theme.accent())
-                .add_modifier(Modifier::BOLD),
-        ),
-    ]));
+    lines.push(Line::from(vec![Span::styled(
+        "  ⌨️  Keyboard Shortcuts",
+        Style::default()
+            .fg(theme.accent())
+            .add_modifier(Modifier::BOLD),
+    )]));
     lines.push(Line::from(""));
 
     for (section, items) in &help_items {
-        lines.push(Line::from(vec![
-            Span::styled(
-                format!("  ─── {} ───", section),
-                Style::default().fg(theme.secondary()).add_modifier(Modifier::BOLD),
-            ),
-        ]));
+        lines.push(Line::from(vec![Span::styled(
+            format!("  ─── {} ───", section),
+            Style::default()
+                .fg(theme.secondary())
+                .add_modifier(Modifier::BOLD),
+        )]));
         lines.push(Line::from(""));
         for (key, desc) in items {
             lines.push(Line::from(vec![
-                Span::styled(format!("    {:20}", key), Style::default().fg(theme.accent())),
+                Span::styled(
+                    format!("    {:20}", key),
+                    Style::default().fg(theme.accent()),
+                ),
                 Span::styled(*desc, Style::default().fg(theme.text())),
             ]));
         }
         lines.push(Line::from(""));
     }
 
-    let help = Paragraph::new(lines)
-        .block(
-            Block::default()
-                .borders(Borders::ALL)
-                .border_style(Style::default().fg(theme.accent()))
-                .title(" Help ")
-                .title_style(Style::default().fg(theme.accent()).add_modifier(Modifier::BOLD))
-                .padding(Padding::uniform(1))
-                .style(Style::default().bg(theme.surface())),
-        );
+    let help = Paragraph::new(lines).block(
+        Block::default()
+            .borders(Borders::ALL)
+            .border_style(Style::default().fg(theme.accent()))
+            .title(" Help ")
+            .title_style(
+                Style::default()
+                    .fg(theme.accent())
+                    .add_modifier(Modifier::BOLD),
+            )
+            .padding(Padding::uniform(1))
+            .style(Style::default().bg(theme.surface())),
+    );
 
     frame.render_widget(help, area);
 }

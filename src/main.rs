@@ -8,10 +8,9 @@ mod ai;
 mod ui;
 mod pdf_extract;
 
-use app::{App, Feedback, InputTarget, PersistedState, Screen};
+use app::{App, AiReceiver, Feedback, InputTarget, PersistedState, Screen, ShuffledOptions};
 use config::Config;
 use engine::QuizMode;
-use models::Answer;
 
 use color_eyre::Result;
 use crossterm::{
@@ -19,8 +18,11 @@ use crossterm::{
     execute,
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
+use rand::RngCore;
+use rand::SeedableRng;
 use ratatui::prelude::*;
 use std::time::{Duration, Instant};
+use tokio::sync::mpsc;
 
 const TICK_RATE: Duration = Duration::from_millis(33); // ~30fps
 
@@ -233,18 +235,22 @@ async fn run_app(
                             // A real implementation would score M1 here before generating M2.
                             let mut routing = mod_num;
                             if mod_num == 2 {
-                               let answered_correct = state.questions.iter().zip(&state.user_answers).filter(|(q, a)| {
-                                   if let Some(ans_idx) = a {
-                                       let user_str = Answer::from_index(*ans_idx).map(|x| x.to_string()).unwrap_or_default();
-                                       user_str == q.correct_answer
+                               let answered_correct = state.questions.iter().enumerate().filter(|(i, _)| {
+                                   if let Some(ans_idx) = state.user_answers[*i] {
+                                       if *i < state.shuffled_options.len() {
+                                           ans_idx == state.shuffled_options[*i].correct_index
+                                       } else {
+                                           false
+                                       }
                                    } else { false }
                                }).count();
                                routing = if answered_correct >= (state.questions.len() / 2) { 3 } else { 2 };
                             }
 
-                            if let Ok(questions) = engine::generate_mock_module(pool, next_sec, routing).await {
-                                app.mock_exam_state = Some(models::MockExamState::new(
+                            if let Ok((questions, shuffles)) = engine::generate_mock_module(pool, next_sec, routing).await {
+                                app.mock_exam_state = Some(models::MockExamState::new_with_shuffles(
                                     questions,
+                                    shuffles,
                                     next_sec,
                                     if next_sec == models::MockSection::Math { 35 * 60 } else { 32 * 60 },
                                 ));
@@ -258,27 +264,41 @@ async fn run_app(
                 }
             }
 
-            // Timed mode countdown
+            // Timed mode countdown (use elapsed time, not frame ticks)
             if app.screen == Screen::Quiz && !app.answered {
-                if let Some(ref mut time) = app.time_remaining_secs {
-                    if let Some(start) = app.question_start_time {
+                if let Some(start) = app.question_start_time {
+                    let total_time = app.time_total_secs.unwrap_or(0);
+                    if total_time > 0 {
                         let elapsed = start.elapsed().as_secs();
-                        if elapsed > 0 {
-                            *time = time.saturating_sub(1);
-                            if *time == 0 {
-                                // Time's up — mark as wrong
-                                if let Some(q) = &app.current_question {
-                                    let _ = db::record_answer(pool, q.id, false, elapsed as i64).await;
-                                    app.answered = true;
-                                    app.feedback = Feedback::Wrong;
-                                    app.feedback_timer = 60;
-                                    app.session_questions += 1;
-                                    app.total_answered += 1;
-                                    app.current_streak = 0;
-                                }
+                        if elapsed >= total_time {
+                            // Time's up — mark as wrong
+                            if let Some(q) = &app.current_question {
+                                let _ = db::record_answer(pool, q.id, false, elapsed as i64).await;
+                                app.answered = true;
+                                app.feedback = Feedback::Wrong;
+                                app.feedback_timer = 60;
+                                app.session_questions += 1;
+                                app.total_answered += 1;
+                                app.current_streak = 0;
+                                app.time_remaining_secs = Some(0);
                             }
+                        } else {
+                            app.time_remaining_secs = Some(total_time - elapsed);
                         }
                     }
+                }
+            }
+
+            // Drain AI response channel
+            if let Some(ref mut receiver) = app.ai_receiver {
+                if let Ok(response) = receiver.rx.try_recv() {
+                    app.ai_loading = false;
+                    app.ai_response = Some(match response {
+                        ai::AiResponse::Success(text) => text,
+                        ai::AiResponse::Offline(msg) => msg,
+                        ai::AiResponse::Error(msg) => msg,
+                    });
+                    app.ai_receiver = None;
                 }
             }
 
@@ -332,7 +352,7 @@ async fn handle_home_keys(app: &mut App, pool: &sqlx::SqlitePool, key: KeyCode) 
             }
         }
         KeyCode::Down | KeyCode::Char('j') => {
-            if app.home_selected < 3 {
+            if app.home_selected < 4 {
                 app.home_selected += 1;
             }
         }
@@ -345,9 +365,10 @@ async fn handle_home_keys(app: &mut App, pool: &sqlx::SqlitePool, key: KeyCode) 
                 }
                 1 => {
                     // Mock Exam
-                    if let Ok(questions) = engine::generate_mock_module(pool, models::MockSection::ReadingWriting, 1).await {
-                        app.mock_exam_state = Some(models::MockExamState::new(
+                    if let Ok((questions, shuffles)) = engine::generate_mock_module(pool, models::MockSection::ReadingWriting, 1).await {
+                        app.mock_exam_state = Some(models::MockExamState::new_with_shuffles(
                             questions,
+                            shuffles,
                             models::MockSection::ReadingWriting,
                             32 * 60, // 32 minutes for RW Module 1
                         ));
@@ -378,36 +399,38 @@ async fn handle_home_keys(app: &mut App, pool: &sqlx::SqlitePool, key: KeyCode) 
 }
 
 async fn handle_quiz_keys(app: &mut App, pool: &sqlx::SqlitePool, key: KeyCode) {
+    // ===== STATE 2: Already answered, waiting for user to press Enter for next =====
     if app.answered {
-        // After answering, waiting for next action
         match key {
-            KeyCode::Enter | KeyCode::Char(' ') => {
-                // Next question
+            KeyCode::Enter => {
+                // Only way to go to next question
                 app.answered = false;
                 app.feedback = Feedback::None;
                 app.ai_response = None;
                 load_question(app, pool).await;
             }
             KeyCode::Char('e') | KeyCode::Char('E') => {
-                // AI explanation
+                // AI explanation (non-blocking)
                 if !app.ai_loading {
                     if let Some(q) = &app.current_question {
                         let q_text = q.question_text.clone();
-                        let correct = q.correct_answer.clone();
+                        let correct_text = app.shuffled_options.as_ref()
+                            .map(|o| o.texts[o.correct_index].clone())
+                            .unwrap_or_else(|| q.correct_answer.clone());
                         let domain = q.domain.clone();
-                        let user_ans = Answer::from_index(app.selected_answer)
-                            .map(|a| a.to_string())
+                        let user_ans = app.shuffled_options.as_ref()
+                            .map(|o| o.texts[app.selected_answer].clone())
                             .unwrap_or_default();
 
+                        let ai_client = app.ai_client.clone_for_spawn();
                         app.ai_loading = true;
-                        let response = app.ai_client.explain_answer(
-                            &q_text, &correct, &user_ans, &domain
-                        ).await;
-                        app.ai_loading = false;
-                        app.ai_response = Some(match response {
-                            ai::AiResponse::Success(text) => text,
-                            ai::AiResponse::Offline(msg) => msg,
-                            ai::AiResponse::Error(msg) => msg,
+                        let (tx, rx) = mpsc::unbounded_channel();
+                        app.ai_receiver = Some(AiReceiver { rx });
+                        tokio::spawn(async move {
+                            let response = ai_client.explain_answer(
+                                &q_text, &correct_text, &user_ans, &domain
+                            ).await;
+                            let _ = tx.send(response);
                         });
                     }
                 }
@@ -424,8 +447,9 @@ async fn handle_quiz_keys(app: &mut App, pool: &sqlx::SqlitePool, key: KeyCode) 
         return;
     }
 
-    // During question answering
+    // ===== STATE 1: Answering the question =====
     match key {
+        // Navigate options with arrow keys or j/k
         KeyCode::Up | KeyCode::Char('k') => {
             if app.selected_answer > 0 {
                 app.selected_answer -= 1;
@@ -436,18 +460,19 @@ async fn handle_quiz_keys(app: &mut App, pool: &sqlx::SqlitePool, key: KeyCode) 
                 app.selected_answer += 1;
             }
         }
+        // Direct select with letter keys
         KeyCode::Char('a') | KeyCode::Char('A') => app.selected_answer = 0,
         KeyCode::Char('b') | KeyCode::Char('B') => app.selected_answer = 1,
         KeyCode::Char('c') | KeyCode::Char('C') => app.selected_answer = 2,
         KeyCode::Char('d') | KeyCode::Char('D') => app.selected_answer = 3,
+        // SUBMIT answer with Enter - only key that locks in the answer
         KeyCode::Enter => {
-            // Submit answer
             if let Some(q) = &app.current_question {
-                let user_answer = Answer::from_index(app.selected_answer)
-                    .map(|a| a.to_string())
-                    .unwrap_or_default();
-
-                let is_correct = user_answer == q.correct_answer;
+                let is_correct = if let Some(ref opts) = app.shuffled_options {
+                    app.selected_answer == opts.correct_index
+                } else {
+                    false
+                };
 
                 let time_spent = app.question_start_time
                     .map(|t| t.elapsed().as_secs() as i64)
@@ -469,40 +494,38 @@ async fn handle_quiz_keys(app: &mut App, pool: &sqlx::SqlitePool, key: KeyCode) 
                 } else {
                     app.current_streak = 0;
                     app.feedback = Feedback::Wrong;
-                    // Store for review
-                    app.wrong_answers.push((q.clone(), user_answer));
+                    let user_text = app.shuffled_options.as_ref()
+                        .map(|o| o.texts[app.selected_answer].clone())
+                        .unwrap_or_default();
+                    app.wrong_answers.push((q.clone(), user_text));
                     if app.wrong_answers.len() > 50 {
-                        app.wrong_answers.remove(0); // Keep last 50
+                        app.wrong_answers.remove(0);
                     }
                 }
 
+                // Lock the question - user MUST press Enter again to proceed
                 app.answered = true;
                 app.feedback_timer = 90; // ~3 seconds at 30fps
             }
         }
+        // AI hint (non-blocking, doesn't advance)
         KeyCode::Char('h') | KeyCode::Char('H') => {
-            // AI hint
             if !app.ai_loading {
                 if let Some(q) = &app.current_question {
                     let q_text = q.question_text.clone();
                     let domain = q.domain.clone();
+                    let ai_client = app.ai_client.clone_for_spawn();
                     app.ai_loading = true;
-                    let response = app.ai_client.get_hint(&q_text, &domain).await;
-                    app.ai_loading = false;
-                    app.ai_response = Some(match response {
-                        ai::AiResponse::Success(text) => text,
-                        ai::AiResponse::Offline(msg) => msg,
-                        ai::AiResponse::Error(msg) => msg,
+                    let (tx, rx) = mpsc::unbounded_channel();
+                    app.ai_receiver = Some(AiReceiver { rx });
+                    tokio::spawn(async move {
+                        let response = ai_client.get_hint(&q_text, &domain).await;
+                        let _ = tx.send(response);
                     });
                 }
             }
         }
-        KeyCode::Char('s') | KeyCode::Char('S') => {
-            // Skip question
-            app.feedback = Feedback::None;
-            app.ai_response = None;
-            load_question(app, pool).await;
-        }
+        // Quit to home
         KeyCode::Char('q') | KeyCode::Char('Q') | KeyCode::Esc => {
             app.navigate(Screen::Home);
         }
@@ -706,11 +729,40 @@ async fn load_question(app: &mut App, pool: &sqlx::SqlitePool) {
 
     match engine::next_question(pool, app.quiz_mode, section, domain).await {
         Ok(Some(q)) => {
+            // Shuffle answer options using question ID as seed for consistency
+            let mut rng = rand::rngs::StdRng::seed_from_u64(q.id as u64);
+            let mut options = [
+                q.option_a.clone(),
+                q.option_b.clone(),
+                q.option_c.clone(),
+                q.option_d.clone(),
+            ];
+            let correct_original: usize = match q.correct_answer.as_str() {
+                "A" => 0, "B" => 1, "C" => 2, "D" => 3, _ => 0,
+            };
+            let correct_text = options[correct_original].clone();
+
+            // Fisher-Yates shuffle
+            for i in (1..4).rev() {
+                let j = (rng.next_u64() as usize) % (i + 1);
+                options.swap(i, j);
+            }
+
+            // Find where correct answer ended up
+            let correct_index = options.iter().position(|o| *o == correct_text).unwrap_or(0);
+
+            app.shuffled_options = Some(ShuffledOptions {
+                texts: options,
+                correct_index,
+            });
+
             app.current_question = Some(q);
             app.selected_answer = 0;
             app.answered = false;
             app.feedback = Feedback::None;
             app.ai_response = None;
+            app.ai_receiver = None;
+            app.ai_loading = false;
 
             // Set up timer if timed mode
             if app.config.timed_mode {
@@ -720,16 +772,20 @@ async fn load_question(app: &mut App, pool: &sqlx::SqlitePool) {
                     app.config.english_time_per_question_secs
                 };
                 app.time_remaining_secs = Some(time);
+                app.time_total_secs = Some(time);
             } else {
                 app.time_remaining_secs = None;
+                app.time_total_secs = None;
             }
             app.question_start_time = Some(Instant::now());
         }
         Ok(None) => {
             app.current_question = None;
+            app.shuffled_options = None;
         }
         Err(_) => {
             app.current_question = None;
+            app.shuffled_options = None;
         }
     }
 }

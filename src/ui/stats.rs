@@ -1,11 +1,11 @@
+use crate::app::App;
 use ratatui::{
     layout::{Constraint, Direction, Layout, Rect},
     style::{Color, Modifier, Style},
     text::{Line, Span},
-    widgets::{Block, Borders, Paragraph, Padding, Wrap},
+    widgets::{Block, Borders, Padding, Paragraph, Wrap},
     Frame,
 };
-use crate::app::App;
 
 pub fn render(frame: &mut Frame, app: &App, area: Rect) {
     let theme = app.theme();
@@ -13,10 +13,10 @@ pub fn render(frame: &mut Frame, app: &App, area: Rect) {
     let chunks = Layout::default()
         .direction(Direction::Vertical)
         .constraints([
-            Constraint::Length(3),      // Title
-            Constraint::Length(10),     // Heatmap
-            Constraint::Length(2),      // Spacer
-            Constraint::Min(8),        // Domain breakdown
+            Constraint::Length(3),  // Title
+            Constraint::Length(10), // Heatmap
+            Constraint::Length(2),  // Spacer
+            Constraint::Min(8),     // Domain breakdown
         ])
         .margin(1)
         .split(area);
@@ -51,7 +51,11 @@ pub fn render(frame: &mut Frame, app: &App, area: Rect) {
         Span::styled(
             format!("🧠 SRS Due: {}", app.srs_due_count),
             Style::default()
-                .fg(if app.srs_due_count > 0 { theme.warning() } else { theme.dim() })
+                .fg(if app.srs_due_count > 0 {
+                    theme.warning()
+                } else {
+                    theme.dim()
+                })
                 .add_modifier(Modifier::BOLD),
         ),
     ]));
@@ -68,12 +72,12 @@ fn render_heatmap(frame: &mut Frame, app: &App, area: Rect) {
     let theme = app.theme();
 
     let mut lines: Vec<Line> = Vec::new();
-    lines.push(Line::from(vec![
-        Span::styled(
-            "  Study Activity (Last 12 Weeks)",
-            Style::default().fg(theme.text()).add_modifier(Modifier::BOLD),
-        ),
-    ]));
+    lines.push(Line::from(vec![Span::styled(
+        "  Study Activity (Last 12 Weeks)",
+        Style::default()
+            .fg(theme.text())
+            .add_modifier(Modifier::BOLD),
+    )]));
 
     // Build heatmap grid: 7 rows (days) x N columns (weeks)
     let weeks = 12;
@@ -135,16 +139,19 @@ fn render_heatmap(frame: &mut Frame, app: &App, area: Rect) {
         Span::styled(" More", Style::default().fg(theme.dim())),
     ]));
 
-    let heatmap = Paragraph::new(lines)
-        .block(
-            Block::default()
-                .borders(Borders::ALL)
-                .border_style(Style::default().fg(theme.accent()))
-                .title(" 📅 Activity Heatmap ")
-                .title_style(Style::default().fg(theme.accent()).add_modifier(Modifier::BOLD))
-                .padding(Padding::horizontal(1))
-                .style(Style::default().bg(theme.surface())),
-        );
+    let heatmap = Paragraph::new(lines).block(
+        Block::default()
+            .borders(Borders::ALL)
+            .border_style(Style::default().fg(theme.accent()))
+            .title(" 📅 Activity Heatmap ")
+            .title_style(
+                Style::default()
+                    .fg(theme.accent())
+                    .add_modifier(Modifier::BOLD),
+            )
+            .padding(Padding::horizontal(1))
+            .style(Style::default().bg(theme.surface())),
+    );
     frame.render_widget(heatmap, area);
 }
 
@@ -153,36 +160,39 @@ fn render_domain_breakdown(frame: &mut Frame, app: &App, area: Rect) {
 
     let chunks = Layout::default()
         .direction(Direction::Horizontal)
-        .constraints([
-            Constraint::Percentage(50),
-            Constraint::Percentage(50),
-        ])
+        .constraints([Constraint::Percentage(50), Constraint::Percentage(50)])
         .split(area);
 
     // English domains
-    render_section_stats(frame, app, chunks[0], "📝 Reading & Writing", &[
-        "Craft and Structure",
-        "Information and Ideas",
-        "Standard English Conventions",
-        "Expression of Ideas",
-    ]);
+    render_section_stats(
+        frame,
+        app,
+        chunks[0],
+        "📝 Reading & Writing",
+        &[
+            "Craft and Structure",
+            "Information and Ideas",
+            "Standard English Conventions",
+            "Expression of Ideas",
+        ],
+    );
 
     // Math domains
-    render_section_stats(frame, app, chunks[1], "🔢 Mathematics", &[
-        "Algebra",
-        "Advanced Math",
-        "Problem Solving & Data Analysis",
-        "Geometry & Trigonometry",
-    ]);
+    render_section_stats(
+        frame,
+        app,
+        chunks[1],
+        "🔢 Mathematics",
+        &[
+            "Algebra",
+            "Advanced Math",
+            "Problem Solving & Data Analysis",
+            "Geometry & Trigonometry",
+        ],
+    );
 }
 
-fn render_section_stats(
-    frame: &mut Frame,
-    app: &App,
-    area: Rect,
-    title: &str,
-    domains: &[&str],
-) {
+fn render_section_stats(frame: &mut Frame, app: &App, area: Rect, title: &str, domains: &[&str]) {
     let theme = app.theme();
     let mut lines: Vec<Line> = Vec::new();
     lines.push(Line::from(""));
@@ -191,7 +201,11 @@ fn render_section_stats(
         let stat = app.domain_stats.iter().find(|s| s.domain == *domain_name);
 
         let (accuracy, attempted, bar_width) = match stat {
-            Some(s) => (s.accuracy * 100.0, s.total_attempted, (s.accuracy * 20.0) as usize),
+            Some(s) => (
+                s.accuracy * 100.0,
+                s.total_attempted,
+                (s.accuracy * 20.0) as usize,
+            ),
             None => (0.0, 0, 0),
         };
 
@@ -212,12 +226,10 @@ fn render_section_stats(
             domain_name.to_string()
         };
 
-        lines.push(Line::from(vec![
-            Span::styled(
-                format!("  {:22}", short_name),
-                Style::default().fg(theme.text()),
-            ),
-        ]));
+        lines.push(Line::from(vec![Span::styled(
+            format!("  {:22}", short_name),
+            Style::default().fg(theme.text()),
+        )]));
 
         // Progress bar
         let filled = "█".repeat(bar_width);
@@ -230,24 +242,24 @@ fn render_section_stats(
                 format!(" {:.0}% ", accuracy),
                 Style::default().fg(bar_color).add_modifier(Modifier::BOLD),
             ),
-            Span::styled(
-                format!("({})", attempted),
-                Style::default().fg(theme.dim()),
-            ),
+            Span::styled(format!("({})", attempted), Style::default().fg(theme.dim())),
         ]));
         lines.push(Line::from(""));
     }
 
-    let section = Paragraph::new(lines)
-        .block(
-            Block::default()
-                .borders(Borders::ALL)
-                .border_style(Style::default().fg(theme.accent()))
-                .title(format!(" {} ", title))
-                .title_style(Style::default().fg(theme.accent()).add_modifier(Modifier::BOLD))
-                .padding(Padding::horizontal(1))
-                .style(Style::default().bg(theme.surface())),
-        );
+    let section = Paragraph::new(lines).block(
+        Block::default()
+            .borders(Borders::ALL)
+            .border_style(Style::default().fg(theme.accent()))
+            .title(format!(" {} ", title))
+            .title_style(
+                Style::default()
+                    .fg(theme.accent())
+                    .add_modifier(Modifier::BOLD),
+            )
+            .padding(Padding::horizontal(1))
+            .style(Style::default().bg(theme.surface())),
+    );
     frame.render_widget(section, area);
 }
 
@@ -259,36 +271,38 @@ pub fn render_review(frame: &mut Frame, app: &App, area: Rect) {
         let empty = Paragraph::new(vec![
             Line::from(""),
             Line::from(""),
-            Line::from(vec![
-                Span::styled(
-                    "  ✨ No wrong answers to review! Keep it up!",
-                    Style::default().fg(theme.success()).add_modifier(Modifier::BOLD),
-                ),
-            ]),
+            Line::from(vec![Span::styled(
+                "  ✨ No wrong answers to review! Keep it up!",
+                Style::default()
+                    .fg(theme.success())
+                    .add_modifier(Modifier::BOLD),
+            )]),
         ]);
         frame.render_widget(empty, area);
         return;
     }
 
     let mut lines: Vec<Line> = Vec::new();
-    lines.push(Line::from(vec![
-        Span::styled(
-            format!("  📋 Wrong Answers Review ({} questions)", app.wrong_answers.len()),
-            Style::default().fg(theme.accent()).add_modifier(Modifier::BOLD),
+    lines.push(Line::from(vec![Span::styled(
+        format!(
+            "  📋 Wrong Answers Review ({} questions)",
+            app.wrong_answers.len()
         ),
-    ]));
+        Style::default()
+            .fg(theme.accent())
+            .add_modifier(Modifier::BOLD),
+    )]));
     lines.push(Line::from(""));
 
     for (i, (q, user_answer)) in app.wrong_answers.iter().enumerate() {
         lines.push(Line::from(vec![
             Span::styled(
                 format!("  {}. ", i + 1),
-                Style::default().fg(theme.secondary()).add_modifier(Modifier::BOLD),
+                Style::default()
+                    .fg(theme.secondary())
+                    .add_modifier(Modifier::BOLD),
             ),
-            Span::styled(
-                &q.domain,
-                Style::default().fg(theme.accent()),
-            ),
+            Span::styled(&q.domain, Style::default().fg(theme.accent())),
             Span::styled(" │ ", Style::default().fg(theme.dim())),
             Span::styled(
                 q.difficulty_label(),
@@ -298,28 +312,31 @@ pub fn render_review(frame: &mut Frame, app: &App, area: Rect) {
 
         // Question text (truncated)
         let q_preview: String = q.question_text.chars().take(80).collect();
-        lines.push(Line::from(vec![
-            Span::styled(
-                format!("     {}", q_preview),
-                Style::default().fg(theme.text()),
-            ),
-        ]));
+        lines.push(Line::from(vec![Span::styled(
+            format!("     {}", q_preview),
+            Style::default().fg(theme.text()),
+        )]));
 
         lines.push(Line::from(vec![
             Span::styled("     Your: ", Style::default().fg(theme.error())),
             Span::styled(user_answer, Style::default().fg(theme.error())),
             Span::styled("  │  Correct: ", Style::default().fg(theme.success())),
-            Span::styled(&q.correct_answer, Style::default().fg(theme.success()).add_modifier(Modifier::BOLD)),
+            Span::styled(
+                &q.correct_answer,
+                Style::default()
+                    .fg(theme.success())
+                    .add_modifier(Modifier::BOLD),
+            ),
         ]));
 
         if !q.explanation.is_empty() {
             let exp_preview: String = q.explanation.chars().take(100).collect();
-            lines.push(Line::from(vec![
-                Span::styled(
-                    format!("     💡 {}", exp_preview),
-                    Style::default().fg(theme.dim()).add_modifier(Modifier::ITALIC),
-                ),
-            ]));
+            lines.push(Line::from(vec![Span::styled(
+                format!("     💡 {}", exp_preview),
+                Style::default()
+                    .fg(theme.dim())
+                    .add_modifier(Modifier::ITALIC),
+            )]));
         }
         lines.push(Line::from(""));
     }
@@ -332,7 +349,11 @@ pub fn render_review(frame: &mut Frame, app: &App, area: Rect) {
                 .borders(Borders::ALL)
                 .border_style(Style::default().fg(theme.accent()))
                 .title(" Review ")
-                .title_style(Style::default().fg(theme.accent()).add_modifier(Modifier::BOLD))
+                .title_style(
+                    Style::default()
+                        .fg(theme.accent())
+                        .add_modifier(Modifier::BOLD),
+                )
                 .padding(Padding::uniform(1))
                 .style(Style::default().bg(theme.surface())),
         );

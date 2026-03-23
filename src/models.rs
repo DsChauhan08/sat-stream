@@ -265,6 +265,16 @@ pub struct MockExamState {
     pub time_remaining_secs: u64,
     pub rw_score: Option<u16>,
     pub math_score: Option<u16>,
+    /// Precomputed shuffled option texts and correct index for each question
+    #[serde(skip)]
+    pub shuffled_options: Vec<MockShuffledOptions>,
+}
+
+/// Shuffled options for a single mock exam question
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct MockShuffledOptions {
+    pub texts: [String; 4],
+    pub correct_index: usize,
 }
 
 impl MockExamState {
@@ -279,6 +289,27 @@ impl MockExamState {
             time_remaining_secs: duration_secs,
             rw_score: None,
             math_score: None,
+            shuffled_options: Vec::new(),
+        }
+    }
+
+    pub fn new_with_shuffles(
+        questions: Vec<Question>,
+        shuffled_options: Vec<MockShuffledOptions>,
+        section: MockSection,
+        duration_secs: u64,
+    ) -> Self {
+        let len = questions.len();
+        Self {
+            section,
+            module: 1,
+            questions,
+            user_answers: vec![None; len],
+            current_index: 0,
+            time_remaining_secs: duration_secs,
+            rw_score: None,
+            math_score: None,
+            shuffled_options,
         }
     }
 }

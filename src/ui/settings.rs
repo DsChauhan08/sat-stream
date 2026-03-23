@@ -1,11 +1,11 @@
+use crate::app::App;
 use ratatui::{
-    layout::{Constraint, Direction, Layout, Rect, Alignment},
+    layout::{Alignment, Constraint, Direction, Layout, Rect},
     style::{Modifier, Style},
     text::{Line, Span},
-    widgets::{Block, Borders, Paragraph, Padding, List, ListItem, Clear},
+    widgets::{Block, Borders, Clear, List, ListItem, Padding, Paragraph},
     Frame,
 };
-use crate::app::App;
 
 pub fn render(frame: &mut Frame, app: &App, area: Rect) {
     let theme = app.theme();
@@ -13,22 +13,20 @@ pub fn render(frame: &mut Frame, app: &App, area: Rect) {
     let chunks = Layout::default()
         .direction(Direction::Vertical)
         .constraints([
-            Constraint::Length(3),     // Title
-            Constraint::Length(1),     // Spacer
-            Constraint::Min(10),       // Settings list
-            Constraint::Length(2),     // Status message
+            Constraint::Length(3), // Title
+            Constraint::Length(1), // Spacer
+            Constraint::Min(10),   // Settings list
+            Constraint::Length(2), // Status message
         ])
         .margin(1)
         .split(area);
 
-    let title = Paragraph::new(Line::from(vec![
-        Span::styled(
-            "  ⚙️  Settings & Configuration",
-            Style::default()
-                .fg(theme.accent())
-                .add_modifier(Modifier::BOLD),
-        ),
-    ]));
+    let title = Paragraph::new(Line::from(vec![Span::styled(
+        "  ⚙️  Settings & Configuration",
+        Style::default()
+            .fg(theme.accent())
+            .add_modifier(Modifier::BOLD),
+    )]));
     frame.render_widget(title, chunks[0]);
 
     let settings_items = vec![
@@ -110,27 +108,40 @@ pub fn render(frame: &mut Frame, app: &App, area: Rect) {
                     Span::styled(pointer, Style::default().fg(theme.accent())),
                     Span::styled(*label, label_style),
                     Span::styled("  →  ", Style::default().fg(theme.dim())),
-                    Span::styled(value.as_str(), Style::default().fg(value_color).add_modifier(Modifier::BOLD)),
+                    Span::styled(
+                        value.as_str(),
+                        Style::default()
+                            .fg(value_color)
+                            .add_modifier(Modifier::BOLD),
+                    ),
                 ]),
                 Line::from(vec![
                     Span::raw("     "),
-                    Span::styled(*desc, Style::default().fg(theme.dim()).add_modifier(Modifier::ITALIC)),
+                    Span::styled(
+                        *desc,
+                        Style::default()
+                            .fg(theme.dim())
+                            .add_modifier(Modifier::ITALIC),
+                    ),
                 ]),
                 Line::from(""),
             ])
         })
         .collect();
 
-    let list = List::new(items)
-        .block(
-            Block::default()
-                .borders(Borders::ALL)
-                .border_style(Style::default().fg(theme.accent()))
-                .title(" Configuration ")
-                .title_style(Style::default().fg(theme.accent()).add_modifier(Modifier::BOLD))
-                .padding(Padding::uniform(1))
-                .style(Style::default().bg(theme.surface())),
-        );
+    let list = List::new(items).block(
+        Block::default()
+            .borders(Borders::ALL)
+            .border_style(Style::default().fg(theme.accent()))
+            .title(" Configuration ")
+            .title_style(
+                Style::default()
+                    .fg(theme.accent())
+                    .add_modifier(Modifier::BOLD),
+            )
+            .padding(Padding::uniform(1))
+            .style(Style::default().bg(theme.surface())),
+    );
     frame.render_widget(list, chunks[2]);
 
     // Status message
@@ -142,9 +153,11 @@ pub fn render(frame: &mut Frame, app: &App, area: Rect) {
         } else {
             theme.warning()
         };
-        let status = Paragraph::new(Line::from(vec![
-            Span::styled(msg.as_str(), Style::default().fg(color).add_modifier(Modifier::BOLD)),
-        ])).alignment(Alignment::Center);
+        let status = Paragraph::new(Line::from(vec![Span::styled(
+            msg.as_str(),
+            Style::default().fg(color).add_modifier(Modifier::BOLD),
+        )]))
+        .alignment(Alignment::Center);
         frame.render_widget(status, chunks[3]);
     }
 
@@ -171,9 +184,9 @@ fn render_input_popup(frame: &mut Frame, app: &App) {
     let inner_chunks = Layout::default()
         .direction(Direction::Vertical)
         .constraints([
-            Constraint::Length(1),  // Label
-            Constraint::Length(3),  // Input
-            Constraint::Length(1),  // Help
+            Constraint::Length(1), // Label
+            Constraint::Length(3), // Input
+            Constraint::Length(1), // Help
         ])
         .margin(1)
         .split(popup_area);
@@ -183,7 +196,11 @@ fn render_input_popup(frame: &mut Frame, app: &App) {
         .borders(Borders::ALL)
         .border_style(Style::default().fg(theme.accent()))
         .title(format!(" {} ", app.input_label))
-        .title_style(Style::default().fg(theme.accent()).add_modifier(Modifier::BOLD))
+        .title_style(
+            Style::default()
+                .fg(theme.accent())
+                .add_modifier(Modifier::BOLD),
+        )
         .style(Style::default().bg(theme.surface()));
     frame.render_widget(bg, popup_area);
 
@@ -194,7 +211,7 @@ fn render_input_popup(frame: &mut Frame, app: &App) {
         // Mask API key partially
         let buf = &app.input_buffer;
         if buf.len() > 8 {
-            format!("{}...{}", &buf[..4], &buf[buf.len()-4..])
+            format!("{}...{}", &buf[..4], &buf[buf.len() - 4..])
         } else {
             buf.clone()
         }
@@ -205,22 +222,39 @@ fn render_input_popup(frame: &mut Frame, app: &App) {
     let input_line = Paragraph::new(Line::from(vec![
         Span::styled(
             &display,
-            Style::default().fg(if app.input_buffer.is_empty() { theme.dim() } else { theme.text() }),
+            Style::default().fg(if app.input_buffer.is_empty() {
+                theme.dim()
+            } else {
+                theme.text()
+            }),
         ),
         Span::styled(cursor_char, Style::default().fg(theme.accent())),
     ]))
-    .block(Block::default()
-        .borders(Borders::ALL)
-        .border_style(Style::default().fg(theme.dim()))
-        .style(Style::default().bg(theme.bg())));
+    .block(
+        Block::default()
+            .borders(Borders::ALL)
+            .border_style(Style::default().fg(theme.dim()))
+            .style(Style::default().bg(theme.bg())),
+    );
     frame.render_widget(input_line, inner_chunks[1]);
 
     // Help text
     let help = Paragraph::new(Line::from(vec![
-        Span::styled("Enter", Style::default().fg(theme.accent()).add_modifier(Modifier::BOLD)),
+        Span::styled(
+            "Enter",
+            Style::default()
+                .fg(theme.accent())
+                .add_modifier(Modifier::BOLD),
+        ),
         Span::styled(" save  ", Style::default().fg(theme.dim())),
-        Span::styled("Esc", Style::default().fg(theme.accent()).add_modifier(Modifier::BOLD)),
+        Span::styled(
+            "Esc",
+            Style::default()
+                .fg(theme.accent())
+                .add_modifier(Modifier::BOLD),
+        ),
         Span::styled(" cancel", Style::default().fg(theme.dim())),
-    ])).alignment(Alignment::Center);
+    ]))
+    .alignment(Alignment::Center);
     frame.render_widget(help, inner_chunks[2]);
 }

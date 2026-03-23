@@ -1,6 +1,8 @@
-use crate::models::Question;
+use crate::models::{MockShuffledOptions, Question};
 use crate::db;
 use color_eyre::Result;
+use rand::RngCore;
+use rand::SeedableRng;
 use sqlx::SqlitePool;
 
 
@@ -110,12 +112,12 @@ pub async fn get_weak_domains(pool: &SqlitePool) -> Result<Vec<(String, f64)>> {
     Ok(domains)
 }
 
-/// Generate a Mock Exam module
+/// Generate a Mock Exam module with shuffled options
 pub async fn generate_mock_module(
     pool: &SqlitePool,
     section: crate::models::MockSection,
     module: u8,
-) -> Result<Vec<Question>> {
+) -> Result<(Vec<Question>, Vec<MockShuffledOptions>)> {
     let section_str = match section {
         crate::models::MockSection::ReadingWriting => "english",
         crate::models::MockSection::Math => "math",
@@ -154,7 +156,33 @@ pub async fn generate_mock_module(
         return Err(color_eyre::eyre::eyre!("Not enough questions in database"));
     }
 
-    Ok(rows.into_iter().map(|r| r.into()).collect())
+    let questions: Vec<Question> = rows.into_iter().map(|r| r.into()).collect();
+
+    // Shuffle options for each question
+    let mut shuffled = Vec::with_capacity(questions.len());
+    for q in &questions {
+        let mut rng = rand::rngs::StdRng::seed_from_u64(q.id as u64);
+        let mut options = [
+            q.option_a.clone(),
+            q.option_b.clone(),
+            q.option_c.clone(),
+            q.option_d.clone(),
+        ];
+        let correct_original: usize = match q.correct_answer.as_str() {
+            "A" => 0, "B" => 1, "C" => 2, "D" => 3, _ => 0,
+        };
+        let correct_text = options[correct_original].clone();
+
+        for i in (1..4).rev() {
+            let j = (rng.next_u64() as usize) % (i + 1);
+            options.swap(i, j);
+        }
+
+        let correct_index = options.iter().position(|o| *o == correct_text).unwrap_or(0);
+        shuffled.push(MockShuffledOptions { texts: options, correct_index });
+    }
+
+    Ok((questions, shuffled))
 }
 
 #[allow(dead_code)]

@@ -1,12 +1,12 @@
-use ratatui::{
-    layout::{Constraint, Direction, Layout, Rect, Alignment},
-    style::{Modifier, Style},
-    text::{Line, Span},
-    widgets::{Block, Borders, Paragraph, Padding, List, ListItem},
-    Frame,
-};
 use crate::app::App;
 use crate::engine::QuizMode;
+use ratatui::{
+    layout::{Alignment, Constraint, Direction, Layout, Rect},
+    style::{Modifier, Style},
+    text::{Line, Span},
+    widgets::{Block, Borders, List, ListItem, Padding, Paragraph},
+    Frame,
+};
 
 const LOGO: &str = r#"
    _____ ___  ______     _____ __                           
@@ -22,11 +22,11 @@ pub fn render(frame: &mut Frame, app: &App, area: Rect) {
     let chunks = Layout::default()
         .direction(Direction::Vertical)
         .constraints([
-            Constraint::Length(8),     // Logo
-            Constraint::Length(3),     // Tagline
-            Constraint::Length(2),     // Spacer
-            Constraint::Length(12),    // Menu
-            Constraint::Min(0),       // Stats summary
+            Constraint::Length(8),  // Logo
+            Constraint::Length(3),  // Tagline
+            Constraint::Length(2),  // Spacer
+            Constraint::Length(12), // Menu
+            Constraint::Min(0),     // Stats summary
         ])
         .split(area);
 
@@ -46,26 +46,38 @@ pub fn render(frame: &mut Frame, app: &App, area: Rect) {
     let tagline = Paragraph::new(Line::from(vec![
         Span::styled(
             "   Your infinite SAT prep companion ",
-            Style::default().fg(theme.dim()).add_modifier(Modifier::ITALIC),
+            Style::default()
+                .fg(theme.dim())
+                .add_modifier(Modifier::ITALIC),
         ),
-        Span::styled(
-            "• ",
-            Style::default().fg(theme.accent()),
-        ),
-        Span::styled(
-            "Powered by AI",
-            Style::default().fg(theme.secondary()),
-        ),
+        Span::styled("• ", Style::default().fg(theme.accent())),
+        Span::styled("Powered by AI", Style::default().fg(theme.secondary())),
     ]))
     .alignment(Alignment::Center);
     frame.render_widget(tagline, chunks[1]);
 
     // Menu items
     let menu_items = vec![
-        ("🚀", "Start Quiz", "Begin an infinite stream of SAT questions"),
-        ("⏱️ ", "Mock Exam", "Take a full-length digital SAT simulation"),
-        ("📊", "View Analytics", "See your performance dashboard & heatmap"),
-        ("⚙️ ", "Settings", "Configure themes, API keys, and preferences"),
+        (
+            "🚀",
+            "Start Quiz",
+            "Begin an infinite stream of SAT questions",
+        ),
+        (
+            "⏱️ ",
+            "Mock Exam",
+            "Take a full-length digital SAT simulation",
+        ),
+        (
+            "📊",
+            "View Analytics",
+            "See your performance dashboard & heatmap",
+        ),
+        (
+            "⚙️ ",
+            "Settings",
+            "Configure themes, API keys, and preferences",
+        ),
         ("❓", "Help", "View all keyboard shortcuts"),
     ];
 
@@ -83,7 +95,11 @@ pub fn render(frame: &mut Frame, app: &App, area: Rect) {
             };
 
             let pointer = if selected { " ▶ " } else { "   " };
-            let _bg = if selected { theme.surface() } else { theme.bg() };
+            let _bg = if selected {
+                theme.surface()
+            } else {
+                theme.bg()
+            };
 
             ListItem::new(vec![
                 Line::from(vec![
@@ -100,11 +116,7 @@ pub fn render(frame: &mut Frame, app: &App, area: Rect) {
         })
         .collect();
 
-    let menu = List::new(items)
-        .block(
-            Block::default()
-                .padding(Padding::horizontal(4))
-        );
+    let menu = List::new(items).block(Block::default().padding(Padding::horizontal(4)));
     frame.render_widget(menu, chunks[3]);
 
     // Quick stats summary
@@ -134,8 +146,8 @@ pub fn render(frame: &mut Frame, app: &App, area: Rect) {
             ]),
         ];
 
-        let stats = Paragraph::new(stats_lines)
-            .block(Block::default().padding(Padding::horizontal(2)));
+        let stats =
+            Paragraph::new(stats_lines).block(Block::default().padding(Padding::horizontal(2)));
         frame.render_widget(stats, chunks[4]);
     }
 
@@ -161,7 +173,9 @@ fn render_mode_selector(frame: &mut Frame, app: &App, area: Rect) {
             let selected = i == app.mode_selected;
             let pointer = if selected { " ▶ " } else { "   " };
             let style = if selected {
-                Style::default().fg(theme.accent()).add_modifier(Modifier::BOLD)
+                Style::default()
+                    .fg(theme.accent())
+                    .add_modifier(Modifier::BOLD)
             } else {
                 Style::default().fg(theme.text())
             };
@@ -180,16 +194,19 @@ fn render_mode_selector(frame: &mut Frame, app: &App, area: Rect) {
         })
         .collect();
 
-    let list = List::new(items)
-        .block(
-            Block::default()
-                .title(" Select Quiz Mode ")
-                .title_style(Style::default().fg(theme.accent()).add_modifier(Modifier::BOLD))
-                .borders(Borders::ALL)
-                .border_style(Style::default().fg(theme.accent()))
-                .padding(Padding::uniform(1))
-                .style(Style::default().bg(theme.surface())),
-        );
+    let list = List::new(items).block(
+        Block::default()
+            .title(" Select Quiz Mode ")
+            .title_style(
+                Style::default()
+                    .fg(theme.accent())
+                    .add_modifier(Modifier::BOLD),
+            )
+            .borders(Borders::ALL)
+            .border_style(Style::default().fg(theme.accent()))
+            .padding(Padding::uniform(1))
+            .style(Style::default().bg(theme.surface())),
+    );
 
     frame.render_widget(list, popup_area);
 }

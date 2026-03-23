@@ -1,9 +1,16 @@
 use serde::{Deserialize, Serialize};
 
 /// Gemini AI client for hints, explanations, and question generation
+#[derive(Clone)]
 pub struct AiClient {
     api_key: Option<String>,
     client: reqwest::Client,
+}
+
+impl AiClient {
+    pub fn clone_for_spawn(&self) -> Self {
+        self.clone()
+    }
 }
 
 #[derive(Debug, Clone, Serialize)]

@@ -1,12 +1,12 @@
-use ratatui::{
-    layout::{Constraint, Direction, Layout, Rect, Alignment},
-    style::{Modifier, Style},
-    text::{Line, Span},
-    widgets::{Block, Borders, Paragraph, Padding, Wrap},
-    Frame,
-};
 use crate::app::App;
 use crate::models::MockSection;
+use ratatui::{
+    layout::{Alignment, Constraint, Direction, Layout, Rect},
+    style::{Modifier, Style},
+    text::{Line, Span},
+    widgets::{Block, Borders, Padding, Paragraph, Wrap},
+    Frame,
+};
 
 pub fn render(frame: &mut Frame, app: &App, area: Rect) {
     let theme = app.theme();
@@ -19,13 +19,26 @@ pub fn render(frame: &mut Frame, app: &App, area: Rect) {
     let question = &state.questions[state.current_index];
     let user_answer = state.user_answers[state.current_index];
 
+    // Use shuffled options if available
+    let option_letters = ["A", "B", "C", "D"];
+    let option_texts: Vec<String> = if state.current_index < state.shuffled_options.len() {
+        state.shuffled_options[state.current_index].texts.to_vec()
+    } else {
+        vec![
+            question.option_a.clone(),
+            question.option_b.clone(),
+            question.option_c.clone(),
+            question.option_d.clone(),
+        ]
+    };
+
     let chunks = Layout::default()
         .direction(Direction::Vertical)
         .constraints([
-            Constraint::Length(3),     // Top bar (Timer & Section)
-            Constraint::Min(6),        // Question text
-            Constraint::Length(12),    // Options
-            Constraint::Length(3),     // Progress dots/bar
+            Constraint::Length(3),  // Top bar (Timer & Section)
+            Constraint::Min(6),     // Question text
+            Constraint::Length(12), // Options
+            Constraint::Length(3),  // Progress dots/bar
         ])
         .margin(1)
         .split(area);
@@ -41,18 +54,28 @@ pub fn render(frame: &mut Frame, app: &App, area: Rect) {
     let meta_line = Line::from(vec![
         Span::styled(
             format!("  {} Module {}  ", section_name, state.module),
-            Style::default().fg(theme.accent()).add_modifier(Modifier::BOLD),
+            Style::default()
+                .fg(theme.accent())
+                .add_modifier(Modifier::BOLD),
         ),
         Span::styled("│", Style::default().fg(theme.dim())),
         Span::styled(
-            format!("  Question {} of {}  ", state.current_index + 1, state.questions.len()),
+            format!(
+                "  Question {} of {}  ",
+                state.current_index + 1,
+                state.questions.len()
+            ),
             Style::default().fg(theme.text()),
         ),
         Span::styled("│", Style::default().fg(theme.dim())),
         Span::styled(
             format!("  ⏱ {}:{:02}  ", time_remaining / 60, time_remaining % 60),
             Style::default()
-                .fg(if time_remaining < 300 { theme.warning() } else { theme.secondary() })
+                .fg(if time_remaining < 300 {
+                    theme.warning()
+                } else {
+                    theme.secondary()
+                })
                 .add_modifier(Modifier::BOLD),
         ),
     ]);
@@ -70,12 +93,10 @@ pub fn render(frame: &mut Frame, app: &App, area: Rect) {
     // Question text
     let q_text = Paragraph::new(vec![
         Line::from(""),
-        Line::from(vec![
-            Span::styled(
-                format!("  {}", question.question_text),
-                Style::default().fg(theme.text()),
-            ),
-        ]),
+        Line::from(vec![Span::styled(
+            format!("  {}", question.question_text),
+            Style::default().fg(theme.text()),
+        )]),
     ])
     .wrap(Wrap { trim: false })
     .block(
@@ -88,14 +109,7 @@ pub fn render(frame: &mut Frame, app: &App, area: Rect) {
     );
     frame.render_widget(q_text, chunks[1]);
 
-    // Answer options
-    let options = [
-        ("A", &question.option_a),
-        ("B", &question.option_b),
-        ("C", &question.option_c),
-        ("D", &question.option_d),
-    ];
-
+    // Answer options (use shuffled if available)
     let option_chunks = Layout::default()
         .direction(Direction::Vertical)
         .constraints([
@@ -107,13 +121,20 @@ pub fn render(frame: &mut Frame, app: &App, area: Rect) {
         .margin(1)
         .split(chunks[2]);
 
-    for (i, (letter, text)) in options.iter().enumerate() {
+    for i in 0..4 {
+        let letter = option_letters[i];
+        let text = &option_texts[i];
         let is_selected = Some(i) == user_answer;
 
         let (prefix_style, text_style) = if is_selected {
             (
-                Style::default().fg(theme.bg()).bg(theme.accent()).add_modifier(Modifier::BOLD),
-                Style::default().fg(theme.accent()).add_modifier(Modifier::BOLD),
+                Style::default()
+                    .fg(theme.bg())
+                    .bg(theme.accent())
+                    .add_modifier(Modifier::BOLD),
+                Style::default()
+                    .fg(theme.accent())
+                    .add_modifier(Modifier::BOLD),
             )
         } else {
             (
@@ -139,7 +160,7 @@ pub fn render(frame: &mut Frame, app: &App, area: Rect) {
     for i in 0..state.questions.len() {
         let is_current = i == state.current_index;
         let is_answered = state.user_answers[i].is_some();
-        
+
         let style = if is_current {
             Style::default().fg(theme.bg()).bg(theme.accent()) // Inverse for current
         } else if is_answered {

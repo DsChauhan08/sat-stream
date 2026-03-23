@@ -1,8 +1,21 @@
-use crate::ai::AiClient;
+use crate::ai::{AiClient, AiResponse};
 use crate::config::{Config, Theme};
 use crate::engine::QuizMode;
 use crate::models::{DailyActivity, DomainStats, Question};
 use serde::{Deserialize, Serialize};
+use tokio::sync::mpsc;
+
+/// Shuffled answer options for display
+#[derive(Debug, Clone)]
+pub struct ShuffledOptions {
+    pub texts: [String; 4],
+    pub correct_index: usize,
+}
+
+/// AI response channel
+pub struct AiReceiver {
+    pub rx: mpsc::UnboundedReceiver<AiResponse>,
+}
 
 /// Current application screen
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -39,10 +52,10 @@ pub struct App {
 
     // Quiz state
     pub current_question: Option<Question>,
-    pub selected_answer: usize,     // 0-3 for A-D
+    pub selected_answer: usize, // 0-3 for A-D
     pub answered: bool,
     pub feedback: Feedback,
-    pub feedback_timer: u8,         // Countdown for feedback display
+    pub feedback_timer: u8, // Countdown for feedback display
     pub quiz_mode: QuizMode,
     pub section_filter: Option<String>,
     pub domain_filter: Option<String>,
@@ -58,6 +71,7 @@ pub struct App {
 
     // Timed mode
     pub time_remaining_secs: Option<u64>,
+    pub time_total_secs: Option<u64>,
     pub question_start_time: Option<std::time::Instant>,
 
     // Mock Exam state
@@ -73,10 +87,14 @@ pub struct App {
     // AI state
     pub ai_response: Option<String>,
     pub ai_loading: bool,
+    pub ai_receiver: Option<AiReceiver>,
+
+    // Shuffled options for current question
+    pub shuffled_options: Option<ShuffledOptions>,
 
     // UI state
-    pub home_selected: usize,       // Home menu selection
-    pub settings_selected: usize,   // Settings menu selection
+    pub home_selected: usize,     // Home menu selection
+    pub settings_selected: usize, // Settings menu selection
     pub stats_scroll: u16,
     pub review_scroll: u16,
     pub ai_scroll: u16,
@@ -127,6 +145,7 @@ impl App {
             total_correct: 0,
 
             time_remaining_secs: None,
+            time_total_secs: None,
             question_start_time: None,
 
             mock_exam_state: None,
@@ -137,6 +156,9 @@ impl App {
 
             ai_response: None,
             ai_loading: false,
+            ai_receiver: None,
+
+            shuffled_options: None,
 
             home_selected: 0,
             settings_selected: 0,
@@ -182,7 +204,10 @@ impl App {
 
     pub fn cycle_theme(&mut self) {
         let themes = Theme::all();
-        let idx = themes.iter().position(|t| *t == self.config.theme).unwrap_or(0);
+        let idx = themes
+            .iter()
+            .position(|t| *t == self.config.theme)
+            .unwrap_or(0);
         self.config.theme = themes[(idx + 1) % themes.len()];
         let _ = self.config.save();
     }
