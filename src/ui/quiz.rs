@@ -119,6 +119,22 @@ pub fn render(frame: &mut Frame, app: &App, area: Rect) {
         q_lines.push(Line::from(""));
     }
 
+    if question.media_json != "[]" {
+        q_lines.push(Line::from(vec![
+            Span::styled(
+                "  📈 Figure/Table attached. ",
+                Style::default().fg(theme.secondary()),
+            ),
+            Span::styled(
+                "Press G to open media (Kitty)",
+                Style::default()
+                    .fg(theme.accent())
+                    .add_modifier(Modifier::BOLD),
+            ),
+        ]));
+        q_lines.push(Line::from(""));
+    }
+
     q_lines.push(Line::from(vec![Span::styled(
         format!("  {}", question.question_text),
         Style::default().fg(theme.text()),

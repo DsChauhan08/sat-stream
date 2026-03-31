@@ -364,6 +364,7 @@ pub async fn extract_from_pdf(pool: &SqlitePool, path: &str, config: &ExtractCon
                             &source,
                             q.difficulty as i64,
                             "",  // passage - not extracted from PDF yet
+                            "[]", // media_json - not extracted from PDF yet
                             &q.question,
                             &q.option_a,
                             &q.option_b,

@@ -8,6 +8,8 @@ CREATE TABLE IF NOT EXISTS questions (
     sub_domain TEXT NOT NULL DEFAULT '',
     source TEXT NOT NULL DEFAULT 'SAT-Stream',
     difficulty INTEGER NOT NULL DEFAULT 2 CHECK(difficulty BETWEEN 1 AND 3),
+    passage TEXT NOT NULL DEFAULT '',
+    media_json TEXT NOT NULL DEFAULT '[]',
     question_text TEXT NOT NULL,
     option_a TEXT NOT NULL,
     option_b TEXT NOT NULL,

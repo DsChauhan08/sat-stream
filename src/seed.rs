@@ -57,7 +57,7 @@ async fn seed_math_algebra(pool: &SqlitePool) -> Result<()> {
     ];
 
     for (q, a, b, c, d, ans, sub, exp, diff) in questions {
-        db::insert_question(pool, "math", "Algebra", sub, "SAT-Stream", diff, "", q, a, b, c, d, ans, exp).await?;
+        db::insert_question(pool, "math", "Algebra", sub, "SAT-Stream", diff, "", "[]", q, a, b, c, d, ans, exp).await?;
     }
     Ok(())
 }
@@ -98,7 +98,7 @@ async fn seed_math_advanced(pool: &SqlitePool) -> Result<()> {
     ];
 
     for (q, a, b, c, d, ans, sub, exp, diff) in questions {
-        db::insert_question(pool, "math", "Advanced Math", sub, "SAT-Stream", diff, "", q, a, b, c, d, ans, exp).await?;
+        db::insert_question(pool, "math", "Advanced Math", sub, "SAT-Stream", diff, "", "[]", q, a, b, c, d, ans, exp).await?;
     }
     Ok(())
 }
@@ -139,7 +139,7 @@ async fn seed_math_data_analysis(pool: &SqlitePool) -> Result<()> {
     ];
 
     for (q, a, b, c, d, ans, sub, exp, diff) in questions {
-        db::insert_question(pool, "math", "Problem Solving & Data Analysis", sub, "SAT-Stream", diff, "", q, a, b, c, d, ans, exp).await?;
+        db::insert_question(pool, "math", "Problem Solving & Data Analysis", sub, "SAT-Stream", diff, "", "[]", q, a, b, c, d, ans, exp).await?;
     }
     Ok(())
 }
@@ -180,7 +180,7 @@ async fn seed_math_geometry(pool: &SqlitePool) -> Result<()> {
     ];
 
     for (q, a, b, c, d, ans, sub, exp, diff) in questions {
-        db::insert_question(pool, "math", "Geometry & Trigonometry", sub, "SAT-Stream", diff, "", q, a, b, c, d, ans, exp).await?;
+        db::insert_question(pool, "math", "Geometry & Trigonometry", sub, "SAT-Stream", diff, "", "[]", q, a, b, c, d, ans, exp).await?;
     }
     Ok(())
 }
@@ -247,7 +247,7 @@ async fn seed_english_craft(pool: &SqlitePool) -> Result<()> {
     ];
 
     for (passage, q, a, b, c, d, ans, sub, exp, diff) in questions {
-        db::insert_question(pool, "english", "Craft and Structure", sub, "SAT-Stream", diff, passage, q, a, b, c, d, ans, exp).await?;
+        db::insert_question(pool, "english", "Craft and Structure", sub, "SAT-Stream", diff, passage, "[]", q, a, b, c, d, ans, exp).await?;
     }
     Ok(())
 }
@@ -319,7 +319,7 @@ async fn seed_english_information(pool: &SqlitePool) -> Result<()> {
     ];
 
     for (passage, q, a, b, c, d, ans, sub, exp, diff) in questions {
-        db::insert_question(pool, "english", "Information and Ideas", sub, "SAT-Stream", diff, passage, q, a, b, c, d, ans, exp).await?;
+        db::insert_question(pool, "english", "Information and Ideas", sub, "SAT-Stream", diff, passage, "[]", q, a, b, c, d, ans, exp).await?;
     }
     Ok(())
 }
@@ -360,7 +360,7 @@ async fn seed_english_conventions(pool: &SqlitePool) -> Result<()> {
     ];
 
     for (q, a, b, c, d, ans, sub, exp, diff) in questions {
-        db::insert_question(pool, "english", "Standard English Conventions", sub, "SAT-Stream", diff, "", q, a, b, c, d, ans, exp).await?;
+        db::insert_question(pool, "english", "Standard English Conventions", sub, "SAT-Stream", diff, "", "[]", q, a, b, c, d, ans, exp).await?;
     }
     Ok(())
 }
@@ -401,7 +401,7 @@ async fn seed_english_expression(pool: &SqlitePool) -> Result<()> {
     ];
 
     for (q, a, b, c, d, ans, sub, exp, diff) in questions {
-        db::insert_question(pool, "english", "Expression of Ideas", sub, "SAT-Stream", diff, "", q, a, b, c, d, ans, exp).await?;
+        db::insert_question(pool, "english", "Expression of Ideas", sub, "SAT-Stream", diff, "", "[]", q, a, b, c, d, ans, exp).await?;
     }
     Ok(())
 }

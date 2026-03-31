@@ -8,7 +8,7 @@
 
 ## ✨ Features
 
-- **🚀 Infinite Question Stream** — 120+ built-in SAT questions across all 8 official domains
+- **🚀 Infinite Question Stream** — 200+ built-in SAT questions across all 8 official domains
 - **📊 Analytics Dashboard** — GitHub-style activity heatmap, per-domain progress bars, streak tracking  
 - **🤖 AI-Powered Learning** — Gemini API integration for hints, explanations, and question generation
 - **⏱️ Timed Practice Mode** — Simulate real SAT timing constraints (95s/math, 71s/English)
@@ -53,9 +53,9 @@ sudo rpm -i target/generate-rpm/sat-stream-*.rpm
 | `↑/↓` or `j/k` | Navigate / Select answer |
 | `Enter` | Confirm selection |
 | `A/B/C/D` | Quick select answer |
+| `G` | Open graph/figure (Kitty) |
 | `H` | Get AI hint |
 | `E` | Get AI explanation (after answering) |
-| `S` | Skip question |
 | `M` | Change quiz mode |
 | `T` | Cycle color theme |
 | `1-5` | Quick navigation between screens |

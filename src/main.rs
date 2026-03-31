@@ -1,16 +1,19 @@
 mod app;
+mod ai;
 mod config;
 mod db;
 mod engine;
+mod media;
+mod media_assets;
 mod models;
-mod seed;
-mod ai;
-mod ui;
 mod pdf_extract;
+mod seed;
+mod ui;
 
 use app::{App, AiReceiver, Feedback, InputTarget, PersistedState, Screen, ShuffledOptions};
 use config::Config;
 use engine::QuizMode;
+use media::{kitty_media_supported, show_image_in_kitty};
 
 use color_eyre::Result;
 use crossterm::{
@@ -399,9 +402,41 @@ async fn handle_home_keys(app: &mut App, pool: &sqlx::SqlitePool, key: KeyCode) 
 }
 
 async fn handle_quiz_keys(app: &mut App, pool: &sqlx::SqlitePool, key: KeyCode) {
-    // ===== STATE 2: Already answered, waiting for user to press Enter for next =====
+        // ===== STATE 2: Already answered, waiting for user to press Enter for next =====
     if app.answered {
         match key {
+            KeyCode::Char('g') | KeyCode::Char('G') => {
+                if let Some(q) = &app.current_question {
+                    if q.media_json != "[]" {
+                        match serde_json::from_str::<Vec<serde_json::Value>>(&q.media_json) {
+                            Ok(items) => {
+                                let mut shown = false;
+                                for item in items {
+                                    let path = item.get("path").and_then(|v| v.as_str()).unwrap_or_default();
+                                    if path.is_empty() {
+                                        continue;
+                                    }
+                                    match show_image_in_kitty(path) {
+                                        Ok(_) => {
+                                            shown = true;
+                                            break;
+                                        }
+                                        Err(e) => {
+                                            app.set_status(&format!("✗ {}", e));
+                                        }
+                                    }
+                                }
+                                if !shown {
+                                    app.set_status("✗ No viewable media for this question");
+                                }
+                            }
+                            Err(_) => app.set_status("✗ Failed to parse question media payload"),
+                        }
+                    } else {
+                        app.set_status("No media attached to this question");
+                    }
+                }
+            }
             KeyCode::Enter => {
                 // Only way to go to next question
                 app.answered = false;
@@ -449,6 +484,38 @@ async fn handle_quiz_keys(app: &mut App, pool: &sqlx::SqlitePool, key: KeyCode) 
 
     // ===== STATE 1: Answering the question =====
     match key {
+        KeyCode::Char('g') | KeyCode::Char('G') => {
+            if let Some(q) = &app.current_question {
+                if q.media_json != "[]" {
+                    match serde_json::from_str::<Vec<serde_json::Value>>(&q.media_json) {
+                        Ok(items) => {
+                            let mut shown = false;
+                            for item in items {
+                                let path = item.get("path").and_then(|v| v.as_str()).unwrap_or_default();
+                                if path.is_empty() {
+                                    continue;
+                                }
+                                match show_image_in_kitty(path) {
+                                    Ok(_) => {
+                                        shown = true;
+                                        break;
+                                    }
+                                    Err(e) => {
+                                        app.set_status(&format!("✗ {}", e));
+                                    }
+                                }
+                            }
+                            if !shown {
+                                app.set_status("✗ No viewable media for this question");
+                            }
+                        }
+                        Err(_) => app.set_status("✗ Failed to parse question media payload"),
+                    }
+                } else {
+                    app.set_status("No media attached to this question");
+                }
+            }
+        }
         // Scroll passage with Page Up/Down
         KeyCode::PageUp => {
             app.passage_scroll = app.passage_scroll.saturating_sub(3);
@@ -673,6 +740,13 @@ async fn handle_settings_keys(app: &mut App, pool: &sqlx::SqlitePool, key: KeyCo
 
 fn handle_help_keys(app: &mut App, key: KeyCode) {
     match key {
+        KeyCode::Char('i') | KeyCode::Char('I') => {
+            if kitty_media_supported() {
+                app.set_status("✓ Kitty media protocol detected");
+            } else {
+                app.set_status("✗ Kitty media protocol not detected");
+            }
+        }
         KeyCode::Char('q') | KeyCode::Char('Q') | KeyCode::Esc => {
             app.navigate(Screen::Home);
         }

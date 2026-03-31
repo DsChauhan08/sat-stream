@@ -1,9 +1,11 @@
 pub mod app;
+pub mod ai;
 pub mod config;
 pub mod db;
 pub mod engine;
+pub mod media;
+pub mod media_assets;
 pub mod models;
-pub mod seed;
-pub mod ai;
-pub mod ui;
 pub mod pdf_extract;
+pub mod seed;
+pub mod ui;

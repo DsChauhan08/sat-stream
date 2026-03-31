@@ -132,6 +132,7 @@ pub struct Question {
     pub source: String,
     pub difficulty: i64,
     pub passage: String,
+    pub media_json: String,
     pub question_text: String,
     pub option_a: String,
     pub option_b: String,

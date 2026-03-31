@@ -39,6 +39,11 @@ pub async fn init_db(db_path: &str) -> Result<SqlitePool> {
         .await
         .ok(); // Ignore if column already exists
 
+    sqlx::query(include_str!("../migrations/003_add_media_json.sql"))
+        .execute(&pool)
+        .await
+        .ok(); // Ignore if column already exists
+
     Ok(pool)
 }
 
@@ -58,7 +63,7 @@ pub async fn get_random_question(
 ) -> Result<Option<Question>> {
     let mut query = String::from(
         "SELECT id, section, domain, sub_domain, source, difficulty, \
-         passage, question_text, option_a, option_b, option_c, option_d, \
+         passage, media_json, question_text, option_a, option_b, option_c, option_d, \
          correct_answer, explanation FROM questions"
     );
     let mut conditions = Vec::new();
@@ -92,7 +97,7 @@ pub async fn get_random_question(
 pub async fn get_due_questions(pool: &SqlitePool, limit: i64) -> Result<Vec<Question>> {
     let rows = sqlx::query_as::<_, QuestionRow>(
         "SELECT q.id, q.section, q.domain, q.sub_domain, q.source, q.difficulty, \
-         q.passage, q.question_text, q.option_a, q.option_b, q.option_c, q.option_d, \
+         q.passage, q.media_json, q.question_text, q.option_a, q.option_b, q.option_c, q.option_d, \
          q.correct_answer, q.explanation \
          FROM questions q \
          INNER JOIN spaced_repetition sr ON q.id = sr.question_id \
@@ -321,6 +326,7 @@ pub async fn insert_question(
     source: &str,
     difficulty: i64,
     passage: &str,
+    media_json: &str,
     question_text: &str,
     option_a: &str,
     option_b: &str,
@@ -331,8 +337,8 @@ pub async fn insert_question(
 ) -> Result<()> {
     sqlx::query(
         "INSERT INTO questions (section, domain, sub_domain, source, difficulty, \
-         passage, question_text, option_a, option_b, option_c, option_d, correct_answer, explanation) \
-         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13)"
+         passage, media_json, question_text, option_a, option_b, option_c, option_d, correct_answer, explanation) \
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14)"
     )
     .bind(section)
     .bind(domain)
@@ -340,6 +346,7 @@ pub async fn insert_question(
     .bind(source)
     .bind(difficulty)
     .bind(passage)
+    .bind(media_json)
     .bind(question_text)
     .bind(option_a)
     .bind(option_b)
@@ -362,6 +369,7 @@ pub struct QuestionRow {
     source: String,
     difficulty: i64,
     passage: String,
+    media_json: String,
     question_text: String,
     option_a: String,
     option_b: String,
@@ -381,6 +389,7 @@ impl From<QuestionRow> for Question {
             source: r.source,
             difficulty: r.difficulty,
             passage: r.passage,
+            media_json: r.media_json,
             question_text: r.question_text,
             option_a: r.option_a,
             option_b: r.option_b,

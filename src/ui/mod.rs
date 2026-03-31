@@ -130,6 +130,7 @@ fn render_footer(frame: &mut Frame, app: &App, area: Rect) {
             if app.answered {
                 vec![
                     ("Enter", "Next Question"),
+                    ("G", "Open Graph/Figure"),
                     ("E", "AI Explain"),
                     ("R", "Review"),
                     ("Q", "Home"),
@@ -139,6 +140,7 @@ fn render_footer(frame: &mut Frame, app: &App, area: Rect) {
                     ("A-D", "Select"),
                     ("↑↓", "Move"),
                     ("Enter", "Submit Answer"),
+                    ("G", "Open Graph/Figure"),
                     ("H", "AI Hint"),
                     ("Q", "Home"),
                 ]
@@ -213,6 +215,7 @@ fn render_help(frame: &mut Frame, app: &App, area: Rect) {
                 ("A / B / C / D", "Select answer directly"),
                 ("↑ / ↓", "Move selection up/down"),
                 ("Enter", "Submit answer / Next question"),
+                ("G", "Open graph/table image (Kitty)"),
                 ("H", "Get AI hint (requires Gemini API key)"),
                 ("E", "Get AI explanation (after answering)"),
                 ("M", "Change quiz mode"),
@@ -221,6 +224,7 @@ fn render_help(frame: &mut Frame, app: &App, area: Rect) {
         (
             "General",
             vec![
+                ("I", "Check Kitty media support"),
                 ("T", "Cycle color theme"),
                 ("K", "Set Gemini API key"),
                 ("?", "Show this help screen"),
