@@ -1,0 +1,18 @@
+{
+  "source": "Barrons Practice1 Math Module2",
+  "section": "math",
+  "domain": "Advanced Math",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "A circle with an original area of 16π units increases in area by 56.25%. What is the radius of the new circle?",
+  "options": [
+    "5 units",
+    "6 units",
+    "10 units",
+    "25 units 11"
+  ],
+  "correct_answer": "D",
+  "explanation": "",
+  "media_json": "[]"
+}

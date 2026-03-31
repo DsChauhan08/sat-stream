@@ -1,0 +1,18 @@
+{
+  "source": "Princeton Test1 RW Module2",
+  "section": "english",
+  "domain": "Information and Ideas",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "The curator of a museum claims that a dress in his possession was worn by the wife of one of Lincoln’s generals at the presidential inauguration in 1865. Radiocarbon dating, which dates organic material with an error range of about thirty years in either direction, was performed on the sleeves of the dress, revealing that they date back to the 1975–2005 period. If both the curator’s claim and the radiocarbon dating analysis are correct, that would suggest that __________ .",
+  "options": [
+    "the dress was made sometime between 1835 and 1895 and then damaged sometime after 1975.",
+    "vintage dresses are more commonly recovered from the late twentieth and early twenty-first centuries than from the mid-nineteenth century.",
+    "over one hundred years after the dress was made, its sleeves were replaced.",
+    "the dress was made from material different from that used for most dresses in the nineteenth century."
+  ],
+  "correct_answer": "A",
+  "explanation": "",
+  "media_json": "[]"
+}

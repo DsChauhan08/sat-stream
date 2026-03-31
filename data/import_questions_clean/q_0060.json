@@ -1,0 +1,18 @@
+{
+  "source": "Princeton Test1 Math Module1",
+  "section": "math",
+  "domain": "Advanced Math",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "The following text is adapted from Charles Dickens’s 1859 novel A Tale of Two Cities. Mr. Lorry, traveling to France on business, is delivering some news to Miss Manette, the daughter of one of his friends. “Miss Manette, I am a man of business. I have a business charge to acquit myself of. In your reception of it, don’t heed me any more than if I was a speaking machine—truly, I am not much else. I will, with your leave, relate to you, miss, the story of one of our customers.” “Story!” He seemed wilfully to mistake the word she had repeated, when he added, in a hurry, “Yes, customers; in the banking business we usually call our connection our customers. He was a French gentleman; a scientific gentleman; a man of great acquirements— a Doctor.” Based on the text, how does Mr. Lorry interact with Miss Manette?",
+  "options": [
+    "Although he claims to be uninterested in the news, he makes purposeful decisions during his conversation with Miss Manette.",
+    "Although he is a professional, he misunderstands Miss Manette’s interjection.",
+    "Although he acts as if the news has no importance to him, he cannot keep the details of the story accurate.",
+    "Although he is unthinkingly following directions, he is flustered by Miss Manette’s rudeness."
+  ],
+  "correct_answer": "A",
+  "explanation": "",
+  "media_json": "[]"
+}

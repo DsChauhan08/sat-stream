@@ -1,0 +1,18 @@
+{
+  "source": "Barrons Diagnostic Math Module1",
+  "section": "math",
+  "domain": "Problem Solving & Data Analysis",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "There are 3 teaspoons in a tablespoon and 16 tablespoons in a cup. How much of a cup or cups would there be in 12 teaspoons?",
+  "options": [
+    "cup",
+    "cup",
+    "2 cups",
+    "6 cups"
+  ],
+  "correct_answer": "B",
+  "explanation": "",
+  "media_json": "[]"
+}

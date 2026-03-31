@@ -1,0 +1,18 @@
+{
+  "source": "Barrons Practice1 Math Module2",
+  "section": "math",
+  "domain": "Advanced Math",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "A particular multivitamin provides 300 mg of calcium, giving 23% of the recommended daily value of calcium for an adult. If another multivitamin provides 210 mg of calcium, approximately what percentage of a recommended daily value of calcium for an adult would it provide, to the nearest whole percent?",
+  "options": [
+    "8%",
+    "16%",
+    "20%",
+    "44%"
+  ],
+  "correct_answer": "B",
+  "explanation": "",
+  "media_json": "[]"
+}

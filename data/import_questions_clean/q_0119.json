@@ -1,0 +1,18 @@
+{
+  "source": "Barrons Diagnostic Math Module2",
+  "section": "math",
+  "domain": "Advanced Math",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "Students at a university were surveyed as to whether they wanted a new library for the university. Out of the 100 students surveyed, 40% said they wanted a new library. What is justifiable based on this information?",
+  "options": [
+    "Of the 100 students surveyed, 40 wanted a new library.",
+    "40% of all people in the university community want a new library.",
+    "Exactly 40 students at the university want a new library.",
+    "No more than 40 university students want a new library."
+  ],
+  "correct_answer": "A",
+  "explanation": "",
+  "media_json": "[]"
+}

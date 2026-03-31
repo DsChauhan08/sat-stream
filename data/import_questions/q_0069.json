@@ -1,0 +1,18 @@
+{
+  "source": "Princeton Test1 Math Module2",
+  "section": "math",
+  "domain": "Algebra",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "The expression x2 – x – 56 is equivalent to which of the following?",
+  "options": [
+    "(x – 14)(x+4)",
+    "(x – 7)(x+8)",
+    "(x – 8)(x+7)",
+    "(x – 4)(x+14)"
+  ],
+  "correct_answer": "A",
+  "explanation": "",
+  "media_json": "[]"
+}

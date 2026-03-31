@@ -1,0 +1,18 @@
+{
+  "source": "Princeton Test1 Math Module1",
+  "section": "math",
+  "domain": "Algebra",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "Dutch philosopher Baruch Spinoza argued as part of his rejection of dualism that all things, living or not, have the inclination to continue to exist and enhance themselves, a property he named “conatus.” All things, he believed, had the tendency to __________ and would only cease to be if acted upon by outside forces.",
+  "options": [
+    "deteriorate",
+    "perish",
+    "persevere",
+    "disappear"
+  ],
+  "correct_answer": "B",
+  "explanation": "",
+  "media_json": "[]"
+}

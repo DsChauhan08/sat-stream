@@ -1,0 +1,18 @@
+{
+  "source": "Princeton Test1 RW Module1",
+  "section": "english",
+  "domain": "Craft and Structure",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "Since the 1950s, scientists have known that rapid eye movement, or REM, occurs when someone is sleeping. Previous studies attempting to determine the meaning of these eye movements have been unsuccessful in part because these studies relied on human subjects recalling the content of their dreams. A recent study by physiologists Yuta Senzai and Massimo Scanziani has avoided this issue by studying dreaming mice instead. Their results suggest that REM is correlated to changes in direction during the dream.",
+  "options": [
+    "It names a problem in the approach taken by Senzai and Scanziani.",
+    "It introduces the difficulty that the study by Senzai and Scanziani was designed to bypass.",
+    "It presents the findings of studies done prior to the study by Senzai and Scanziani.",
+    "It clarifies how others studying REM sleep interpret the study by Senzai and Scanziani."
+  ],
+  "correct_answer": "B",
+  "explanation": "",
+  "media_json": "[]"
+}

@@ -1,0 +1,18 @@
+{
+  "source": "Princeton Test1 Math Module1",
+  "section": "math",
+  "domain": "Algebra",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "Dutch artist M.C. Escher’s work uses __________ to engage viewers by employing mathematical and intuitive processes to create images of objects that at first appear normal but on closer inspection are, in fact, impossible.",
+  "options": [
+    "geometry",
+    "beauty",
+    "paradox",
+    "color"
+  ],
+  "correct_answer": "C",
+  "explanation": "",
+  "media_json": "[]"
+}

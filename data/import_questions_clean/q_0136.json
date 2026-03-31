@@ -1,0 +1,18 @@
+{
+  "source": "Barrons Diagnostic Math Module1",
+  "section": "math",
+  "domain": "Advanced Math",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "The price of a video streaming service increases by 15% each year. If the price, P, of the service begins at v dollars, what is the value of the constant c in the following function that models the price of the service t years after it begins?",
+  "options": [
+    "P = vct",
+    "0.15",
+    "0.85",
+    "1.15"
+  ],
+  "correct_answer": "C",
+  "explanation": "",
+  "media_json": "[]"
+}

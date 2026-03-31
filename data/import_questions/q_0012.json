@@ -1,0 +1,18 @@
+{
+  "source": "Princeton Test1 RW Module1",
+  "section": "english",
+  "domain": "Information and Ideas",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "The air pollution produced in an area is only one factor in that area’s air quality. Weather patterns, in particular wind and the movement of air masses, can affect the concentration of pollutants such as carbon monoxide. During a smog event that occurred in the northeastern United States in November 1966, levels of carbon monoxide were recorded in Newark, New Jersey, the origin of the smog event, as well as neighboring city New York, NY, and more distant cities such as Philadelphia, PA, and Washington, D.C. The localized nature of weather patterns during this event can be seen by comparing Newark, NJ, and New York, NY, with __________.",
+  "options": [
+    "Washington, D.C., on the 18th and the 19th.",
+    "Philadelphia, PA, on the 23rd and the 25th",
+    "Philadelphia, PA, on the 24th and the 26th.",
+    "Washington, D.C., on the 23rd and the 24th."
+  ],
+  "correct_answer": "D",
+  "explanation": "",
+  "media_json": "[]"
+}

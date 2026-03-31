@@ -1,0 +1,18 @@
+{
+  "source": "Princeton Test1 Math Module2",
+  "section": "math",
+  "domain": "Algebra",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "The total amount of plastic remaining to be recycled in a facility over x shifts is represented by the graph above. Which of the following represents the y-intercept of the graph?",
+  "options": [
+    "The total amount of plastic remaining at any given time",
+    "The number of shifts it will take to finish recycling the plastic",
+    "The amount of plastic that is recycled per shift",
+    "The initial amount of plastic to be recycled"
+  ],
+  "correct_answer": "C",
+  "explanation": "",
+  "media_json": "[]"
+}

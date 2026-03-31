@@ -1,0 +1,18 @@
+{
+  "source": "Princeton Test1 RW Module2",
+  "section": "english",
+  "domain": "Information and Ideas",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "The shark’s competitive advantage in the oceanic ecosystem is principally due to electroreception, or ability to detect electrical impulses. Marine biologists believe that this heightened __________ to electrical stimuli allows the shark to easily find its prey, for as fish swim through water, their movement produces minute electrical signals.",
+  "options": [
+    "allergy",
+    "sensitivity",
+    "indifference",
+    "aversion"
+  ],
+  "correct_answer": "C",
+  "explanation": "",
+  "media_json": "[]"
+}

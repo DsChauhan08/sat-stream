@@ -1,0 +1,18 @@
+{
+  "source": "Princeton Test1 RW Module1",
+  "section": "english",
+  "domain": "Craft and Structure",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "Electroreception is the ability of an animal to sense the flow of electricity around it by using specialized organs known as electroreceptors. Most species known to use electroreception are fish, including many sharks, elephant fishes, and eels. However, electroreception is not limited to fish. Monotremes, a group of mammals that includes the platypus and some echidnas, have electroreceptors on or near their mouths to help locate prey. There is also some evidence that bees can detect static electricity on flowers.",
+  "options": [
+    "It generalizes the phenomenon discussed beyond fishes.",
+    "It offers another explanation of electroreception that is different from the explanation of how electroreception is used by fishes.",
+    "It provides more examples of animals with electroreception.",
+    "It explains how electroreception evolved in monotremes and bees."
+  ],
+  "correct_answer": "A",
+  "explanation": "",
+  "media_json": "[]"
+}

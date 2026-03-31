@@ -1,0 +1,18 @@
+{
+  "source": "Princeton Test1 Math Module1",
+  "section": "math",
+  "domain": "Geometry & Trigonometry",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "In Japan, adults may be legally adopted into a family. The practice may have started as early as the 13th century CE, but widespread adult adoption dates from the Tokugawa shogunate, a military government which began around 1600 CE. During this time, members of the ruling class would adopt competent adult males, who would then ensure that the family’s political and business interests would be sustained. While adult adoption remains a way for individuals to improve their economic and social status, the practice has its detractors as well, with some researchers arguing that it can lead to issues with the adoptee developing a firm sense of identity in his or her new environment. Which of the following best illustrates the researcher’s claim?",
+  "options": [
+    "Adult adoptees are entitled to an inheritance from their adoptive families, strengthening the ties between them, which further encourages the adult adoptee to work to enhance the new family’s prosperity.",
+    "While most adult adoptees typically report improved financial status after adoption, many of those same adoptees also experience higher-than-normal rates of depression and anxiety.",
+    "Elsewhere in East Asia, such as in China and Korea, families have a traditional obligation to adopt blood relatives who lack more closely-related living kin, but adoptions in Japan are almost exclusively between those with no blood relations.",
+    "Families with ancestors who were adult adoptees do not distinguish between those ancestors who were members of the family by birth and those who were adopted into the family."
+  ],
+  "correct_answer": "A",
+  "explanation": "",
+  "media_json": "[]"
+}

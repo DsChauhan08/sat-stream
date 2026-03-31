@@ -1,0 +1,18 @@
+{
+  "source": "Barrons Practice1 Math Module2",
+  "section": "math",
+  "domain": "Algebra",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "Tyrese takes a walk around his neighborhood. The distance he is in miles from his house at a particular number of minutes after beginning his walk is represented in the graph above. At what interval of time in his walk did the distance he is from his house decrease most rapidly?",
+  "options": [
+    "0–5 minutes",
+    "15–20 minutes",
+    "25–30 minutes",
+    "30–35"
+  ],
+  "correct_answer": "D",
+  "explanation": "",
+  "media_json": "[]"
+}

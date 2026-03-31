@@ -1,0 +1,18 @@
+{
+  "source": "Princeton Test1 RW Module2",
+  "section": "english",
+  "domain": "Expression of Ideas",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "In 2011, a seismometer detected seismic activity from a magnitude 8.9 earthquake and automatically cut the power to all 30 bullet trains in Japan, potentially avoiding mass architectural damage to the tracks. __________ the cut to the power prevented citizens from being caught in a dangerous location during the earthquake and allowed riders to seek shelter.",
+  "options": [
+    "In addition,",
+    "In comparison,",
+    "For example,",
+    "Specifically,"
+  ],
+  "correct_answer": "D",
+  "explanation": "",
+  "media_json": "[]"
+}

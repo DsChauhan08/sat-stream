@@ -1,0 +1,18 @@
+{
+  "source": "Barrons Diagnostic RW Module1",
+  "section": "english",
+  "domain": "Information and Ideas",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "A fruit stand charges a different amount depending on the number of pieces of fruit in a box: Number of Pieces of Fruit in the Box Cost of Box 6 $13.40 12 $25.40 20 $41.40 32 $65.40 What function could be used to determine the total cost, C, of a box that has x pieces of fruit?",
+  "options": [
+    "C(x) = − x + 2.40",
+    "C(x) = 2x + 1.40",
+    "C(x) = 1.4x +",
+    "C(x) = 2.8x +"
+  ],
+  "correct_answer": "C",
+  "explanation": "",
+  "media_json": "[]"
+}

@@ -1,0 +1,18 @@
+{
+  "source": "Princeton Test1 Math Module1",
+  "section": "math",
+  "domain": "Geometry & Trigonometry",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "Researchers studying the recent eruption of Hunga Tonga–Hunga Ha’apai, a submarine volcano located near the islands of Tonga in the South Pacific, found that the volcanic cloud, compared to those of other eruptions, __________ the highest ever recorded.",
+  "options": [
+    "have been",
+    "are",
+    "was",
+    "were"
+  ],
+  "correct_answer": "C",
+  "explanation": "",
+  "media_json": "[]"
+}

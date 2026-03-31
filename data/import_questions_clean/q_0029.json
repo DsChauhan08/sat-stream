@@ -1,0 +1,18 @@
+{
+  "source": "Princeton Test1 RW Module2",
+  "section": "english",
+  "domain": "Craft and Structure",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "Computer scientist Ray Kurzweil __________ that although artificial intelligence will not displace human beings, it will undoubtedly become smarter than people within this generation. This possibility has been the domain of science fiction writers for decades, whose works explore the ramifications of just such a future.",
+  "options": [
+    "proves",
+    "requires",
+    "predicts",
+    "denies"
+  ],
+  "correct_answer": "C",
+  "explanation": "",
+  "media_json": "[]"
+}

@@ -1,0 +1,18 @@
+{
+  "source": "Princeton Test1 RW Module2",
+  "section": "english",
+  "domain": "Expression of Ideas",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "While researching a topic, a student has taken the following notes: The Endangered Species Act (ESA) was enacted in 1973 to recover species and prevent extinction.",
+  "options": [
+    "species is listed under the ESA when it’s determined that the species needs protection and delisted when the population has recovered. Only 54 of the over 1,000 listed species have been delisted from the ESA, raising concerns about the effectiveness of the ESA. Erich Eberhard, David Wilcove, and Andrew Dobson conducted an analysis of population trends of species listed under the ESA. They found that most species had to wait multiple years before being listed and by then their populations were already so low that recovery was much more difficult. The student wants to make a generalization about the kind of study conducted by Eberhard, Wilcove, and Dobson. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+    "Scientists have analyzed population trends to find out the impact of legal protections in the realm of conservation.",
+    "Species listed under the ESA have low population levels when they are listed.",
+    "Only 54 once-listed species have been delisted; many more species have not recovered and are still listed."
+  ],
+  "correct_answer": "B",
+  "explanation": "",
+  "media_json": "[]"
+}

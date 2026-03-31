@@ -1,0 +1,18 @@
+{
+  "source": "Barrons Diagnostic RW Module1",
+  "section": "english",
+  "domain": "Information and Ideas",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "Which finding, if true, would most directly support Group 2’s hypothesis?",
+  "options": [
+    "Areas in northern Ohio have undergone widespread tree clearing",
+    "over the past two decades, making it necessary for Species X to",
+    "find a new habitat.",
+    "Species X preferred habitat is along the edges of tree lines, so with"
+  ],
+  "correct_answer": "A",
+  "explanation": "",
+  "media_json": "[]"
+}

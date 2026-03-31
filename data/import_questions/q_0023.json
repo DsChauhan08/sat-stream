@@ -1,0 +1,18 @@
+{
+  "source": "Princeton Test1 RW Module1",
+  "section": "english",
+  "domain": "Expression of Ideas",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "While treatment for hearing loss is typically associated with the ears, some patients with damaged ear structures are not able to use traditional cochlear implants. __________ researchers are working to develop hearing aids anchored to patients’ bones in order to combat hearing loss through vibrations in the skull.",
+  "options": [
+    "Secondly,",
+    "In addition,",
+    "Finally,",
+    "Hence,"
+  ],
+  "correct_answer": "D",
+  "explanation": "",
+  "media_json": "[]"
+}

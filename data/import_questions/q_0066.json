@@ -1,0 +1,18 @@
+{
+  "source": "Princeton Test1 Math Module1",
+  "section": "math",
+  "domain": "Advanced Math",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "The North American Free Trade Agreement (NAFTA) was an agreement among the United States, Canada, and Mexico that was in effect between 1994 and 2020. During this time, the number of manufacturing jobs in the United States and Canada declined, but the total number of manufacturing jobs in the countries covered by NAFTA increased. This suggests that, between 1994 and 2020, __________.",
+  "options": [
+    "the number of manufacturing jobs in Mexico increased by a greater amount than the combined decreases in the United States and Canada.",
+    "NAFTA made it more difficult for manufacturers to establish factories in the United States and Canada.",
+    "the cost of manufacturing goods in the area covered by NAFTA decreased.",
+    "complex goods, such as automobiles and electronics, were increasingly manufactured in the United States, Canada, and Mexico."
+  ],
+  "correct_answer": "D",
+  "explanation": "",
+  "media_json": "[]"
+}

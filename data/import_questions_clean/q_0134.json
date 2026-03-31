@@ -1,0 +1,18 @@
+{
+  "source": "Barrons Diagnostic Math Module1",
+  "section": "math",
+  "domain": "Problem Solving & Data Analysis",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "A particular line is graphed in the xy-plane and uses only real numbers. The line has a positive slope and a positive y-intercept. Which of these points could be on the line?",
+  "options": [
+    "(−4, 5)",
+    "(2, 0)",
+    "(3, −6)",
+    "(0, −1)"
+  ],
+  "correct_answer": "A",
+  "explanation": "",
+  "media_json": "[]"
+}

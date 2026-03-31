@@ -1,0 +1,18 @@
+{
+  "source": "Barrons Practice1 Math Module2",
+  "section": "math",
+  "domain": "Advanced Math",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "A data set of 15 different numbers has a median of 25 and a mean of 30. If the smallest member of the set has 5 subtracted from it and the largest member has 20 added to it, while all the other elements remain the same, which of these is a correct statement?",
+  "options": [
+    "The standard deviation of the set changes more than the range of",
+    "the set",
+    "The range of the set changes more than the standard",
+    "deviation of the set."
+  ],
+  "correct_answer": "B",
+  "explanation": "",
+  "media_json": "[]"
+}

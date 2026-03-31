@@ -1,0 +1,18 @@
+{
+  "source": "Princeton Test1 Math Module1",
+  "section": "math",
+  "domain": "Algebra",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "Many species demonstrate rescue behavior, a behavior in which an individual will help another in distress without any obvious benefit to the helper. In fact, this behavior __________ a recent study of Australian magpies when some birds in the study helped other birds remove the trackers that researchers had placed upon them, making it more difficult for the researchers to obtain data.",
+  "options": [
+    "aided",
+    "impeded",
+    "clarified",
+    "exposed"
+  ],
+  "correct_answer": "C",
+  "explanation": "",
+  "media_json": "[]"
+}

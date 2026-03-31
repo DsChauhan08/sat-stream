@@ -1,0 +1,18 @@
+{
+  "source": "Barrons Diagnostic Math Module2",
+  "section": "math",
+  "domain": "Problem Solving & Data Analysis",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "A function g(x) has values given in the table below: x g(x) −3 −1 −2 0 −1 2 0 1 1 0 2 3 Which of the following would be a factor of g(x)?",
+  "options": [
+    "(x − 1)(x + 2)",
+    "(x − 2)(x + 3)",
+    "(x + 1)(x − 2)",
+    "(x + 2)(x − 2)"
+  ],
+  "correct_answer": "A",
+  "explanation": "",
+  "media_json": "[]"
+}

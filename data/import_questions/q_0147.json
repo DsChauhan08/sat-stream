@@ -1,0 +1,18 @@
+{
+  "source": "Barrons Diagnostic Math Module2",
+  "section": "math",
+  "domain": "Advanced Math",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "Due to radiation, the mass of a substance decreases by 0.5% every day. Which type of function would properly model the mass of the substance as the days go by?",
+  "options": [
+    "increasing linear",
+    "decreasing linear",
+    "increasing exponential",
+    "decreasing exponential 11"
+  ],
+  "correct_answer": "D",
+  "explanation": "",
+  "media_json": "[]"
+}

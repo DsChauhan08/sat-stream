@@ -1,0 +1,18 @@
+{
+  "source": "Princeton Test1 Math Module1",
+  "section": "math",
+  "domain": "Algebra",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "The Beat Generation, a literary subculture movement featured in works such as Allen Ginsberg’s Howl (1956) and William S. Burroughs’s Naked Lunch (1959), was characterized by its __________ the traditional values of the 1950s. The movement’s central message of nonconformity would be criticized by American literary critic Manuel Luis Martinez, who believed that the Beat Generation’s lack of attention to the politics of individualism undermined the movement’s goals.",
+  "options": [
+    "dissension from",
+    "gratitude towards",
+    "adherence to",
+    "deference to"
+  ],
+  "correct_answer": "D",
+  "explanation": "",
+  "media_json": "[]"
+}

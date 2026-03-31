@@ -1,0 +1,18 @@
+{
+  "source": "Barrons Diagnostic Math Module1",
+  "section": "math",
+  "domain": "Advanced Math",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "Jane is watering her garden and spends 5 minutes watering each tree and 2 minutes watering each shrub. If she can spend no more than 30 minutes watering her garden, which inequality represents the number of T trees and S shrubs she can water given these constraints?",
+  "options": [
+    "5T + 2S ≥ 30",
+    "5T + 2S ≤ 30",
+    "5 × T × S ≤ 30",
+    "5 > 30 × T × S"
+  ],
+  "correct_answer": "B",
+  "explanation": "",
+  "media_json": "[]"
+}

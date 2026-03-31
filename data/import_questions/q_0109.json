@@ -1,0 +1,18 @@
+{
+  "source": "Barrons Diagnostic RW Module1",
+  "section": "english",
+  "domain": "Expression of Ideas",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "Actually Has Actually Does Not Illness Have Illness Positive Test Result 5 20 Negative Test Result 0 800 If a randomly selected patient who participated in the study with the results given above has a positive test result (i.e., the test indicates that someone has an illness), what is the probability that the result is a false positive?",
+  "options": [
+    "0.5",
+    "0.8",
+    "0.9",
+    "1.2"
+  ],
+  "correct_answer": "C",
+  "explanation": "",
+  "media_json": "[]"
+}

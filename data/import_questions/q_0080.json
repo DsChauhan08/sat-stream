@@ -1,0 +1,18 @@
+{
+  "source": "Barrons Diagnostic RW Module1",
+  "section": "english",
+  "domain": "Information and Ideas",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "Which of the viruses in the table would most effectively be used to support the virologist’s hypothesis?",
+  "options": [
+    "H5N1 and H7N9",
+    "H1N1 and H2N2",
+    "H3N2 and H1N1",
+    "H3N2 and H2N2"
+  ],
+  "correct_answer": "B",
+  "explanation": "",
+  "media_json": "[]"
+}

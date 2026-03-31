@@ -1,0 +1,18 @@
+{
+  "source": "Princeton Test1 Math Module1",
+  "section": "math",
+  "domain": "Advanced Math",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "From 1634 to 1637 CE, tulips in the Dutch Republic sold for extraordinarily high prices, sometimes as much as 10 times the annual wage of a skilled worker, in a phenomenon known as tulip mania. Some economists, such as Charles Kindleberger, argue that tulip mania was the first speculative bubble in history, during which the prices of a commodity (in this case tulip bulbs) do not follow the typical rules of economics. Others, such as Peter Garber, believe that tulip mania is explainable by fundamental economic concepts such as supply and demand. Which finding, if true, would most directly support Garber’s argument?",
+  "options": [
+    "Tulips during this period were very rare, and demand for tulips was fueled in part by the ability to reproduce and sell bulbs, enabling some purchasers to make profits.",
+    "Some common bulbs, such as the Witte Croonen bulb, saw price increases as dramatic as those of rare bulbs.",
+    "The prices of tulip bulbs were much higher than could be supported by the banking system in place in 17th century Europe.",
+    "The tulip mania led to an increase of the supply of gold coins in the Dutch Republic."
+  ],
+  "correct_answer": "D",
+  "explanation": "",
+  "media_json": "[]"
+}

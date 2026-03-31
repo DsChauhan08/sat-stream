@@ -1,0 +1,18 @@
+{
+  "source": "Barrons Diagnostic Math Module1",
+  "section": "math",
+  "domain": "Geometry & Trigonometry",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "The function f is expressed as f(x) = k for all values of x, and k is a constant real number. Which of the following must be true?",
+  "options": [
+    "I. f(x) forms a line.",
+    "II. f(x) has a slope of zero.",
+    "III. f(x) has a range from − ∞ to + ∞.",
+    "I only"
+  ],
+  "correct_answer": "C",
+  "explanation": "",
+  "media_json": "[]"
+}

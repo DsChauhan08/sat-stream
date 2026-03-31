@@ -1,0 +1,18 @@
+{
+  "source": "Barrons Diagnostic Math Module2",
+  "section": "math",
+  "domain": "Algebra",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "Density equals mass divided by volume. If density is graphed as a line with mass corresponding to the y value and the volume corresponding to the x value, what aspect of the function corresponds to the density of the substance?",
+  "options": [
+    "slope",
+    "y-intercept",
+    "x-intercept",
+    "domain"
+  ],
+  "correct_answer": "A",
+  "explanation": "",
+  "media_json": "[]"
+}

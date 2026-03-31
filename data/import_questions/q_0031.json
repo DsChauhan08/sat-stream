@@ -1,0 +1,18 @@
+{
+  "source": "Princeton Test1 RW Module2",
+  "section": "english",
+  "domain": "Craft and Structure",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "Neurologists know that prosopagnosia—the __________ to recognize faces—involves a specific lesion in the brain and can be caused by disease or head injury. However, prominent author Dr. Oliver Sacks believes that this “face blindness” also has a definite genetic component.",
+  "options": [
+    "capability",
+    "incapacity",
+    "tendency",
+    "reluctance"
+  ],
+  "correct_answer": "A",
+  "explanation": "",
+  "media_json": "[]"
+}

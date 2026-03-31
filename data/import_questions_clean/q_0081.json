@@ -1,0 +1,18 @@
+{
+  "source": "Barrons Diagnostic RW Module1",
+  "section": "english",
+  "domain": "Information and Ideas",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "Which statement would best utilize the information in the table to provide an argument against the researcher’s position?",
+  "options": [
+    "Given the higher crash rate of male drivers as compared to female",
+    "drivers, it is understandable that car manufacturers may prioritize",
+    "male crash test dummies.",
+    "Since drivers over 70 years of age are over twice as likely to get in"
+  ],
+  "correct_answer": "C",
+  "explanation": "",
+  "media_json": "[]"
+}

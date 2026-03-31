@@ -1,0 +1,18 @@
+{
+  "source": "Princeton Test1 Math Module1",
+  "section": "math",
+  "domain": "Problem Solving & Data Analysis",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "The Voynich manuscript was written on vellum dating from the fifteenth century in a script that is not found in any other source. Since cryptographers have yet to demonstrably decipher any portion of the text, the meaning and purpose of the Voynich manuscript remain __________ .",
+  "options": [
+    "enigmatic",
+    "venerable",
+    "multifarious",
+    "coherent"
+  ],
+  "correct_answer": "D",
+  "explanation": "",
+  "media_json": "[]"
+}

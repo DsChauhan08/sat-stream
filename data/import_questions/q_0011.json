@@ -1,0 +1,18 @@
+{
+  "source": "Princeton Test1 RW Module1",
+  "section": "english",
+  "domain": "Information and Ideas",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "Fatty liver disease (FLD) occurs when excess fat builds up in the liver. While there are often few or no symptoms of FLD, if left untreated, it can lead to cirrhosis or liver cancer. Because FLD is often asymptomatic, doctors and researchers rely on indicators such as steatosis (retention of fat in the liver), fibrosis (scarring), blood glucose (sugar), serum insulin, and insulin resistance to measure and track the development of FLD. A group of researchers led by radiologist Hamid Reza Talari hypothesized that those who take vitamin B12 would experience improvements in fibrosis and insulin resistance when compared to a control group over the same time period.",
+  "options": [
+    "Those in the control group had decreases in their steatosis values and fasting blood glucose but had increases in fibrosis values and HOMA-IR.",
+    "Those in the vitamin B12 group had decreases in fibrosis values and HOMA-IR levels, whereas those in the control group had increases in these same values.",
+    "Both those in the vitamin B12 group and the control group had decreases in their steatosis values.",
+    "Those in the control group had a decrease in their fasting blood glucose, but those in the vitamin B12 group had an increase in their fasting blood glucose. Mean Levels of Carbon Monoxide (ppm), November 18–26, 1966 City Day of the Month of November 18 19 20 21 22 23 24 25 26 Newark, NJ 16 14 15 21 23 28 32 27 21 New York, NY 4 3 1 2 3 6 7 13 8 Philadelphia, PA 6 0 0 0 1 6 9 10 6 Washington, D.C. 4 2 3 0 0 0 0 0 0"
+  ],
+  "correct_answer": "B",
+  "explanation": "",
+  "media_json": "[]"
+}

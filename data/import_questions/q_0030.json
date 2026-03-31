@@ -1,0 +1,18 @@
+{
+  "source": "Princeton Test1 RW Module2",
+  "section": "english",
+  "domain": "Craft and Structure",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "In psychology, it’s critical not to generalize from the results of studies in which the subjects are not representative of the larger population. The infamous Stanford Prison Experiment __________ this principle: the participants, whose behavior supposedly demonstrated the “human” tendency towards alarming aggression in authoritarian situations, were a handful of male college-age individuals from the same private university in California rather than a diverse sampling of subjects.",
+  "options": [
+    "illustrates",
+    "refutes",
+    "supersedes",
+    "critiques"
+  ],
+  "correct_answer": "D",
+  "explanation": "",
+  "media_json": "[]"
+}

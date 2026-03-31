@@ -1,0 +1,18 @@
+{
+  "source": "Princeton Test1 Math Module1",
+  "section": "math",
+  "domain": "Geometry & Trigonometry",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "Typically, pure water is not considered particularly __________ , but a team of scientists led by Richard Zare has discovered how microdroplets of water can turn into caustic hydrogen peroxide. When microdroplets of water hit a solid surface, an electric charge jumps between the water and the solid, producing hydroxyl radicals that, in turn, combine with remaining oxygen to form hydrogen peroxide.",
+  "options": [
+    "viable",
+    "contaminated",
+    "common",
+    "reactive"
+  ],
+  "correct_answer": "B",
+  "explanation": "",
+  "media_json": "[]"
+}

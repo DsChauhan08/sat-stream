@@ -1,0 +1,18 @@
+{
+  "source": "Princeton Test1 RW Module1",
+  "section": "english",
+  "domain": "Expression of Ideas",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "While researching a topic, a student has taken the following notes:",
+  "options": [
+    "writing system for expressing numbers is a numeral system. Two examples of numeral systems from history are Babylonian cuneiform numerals and Roman numerals. The Babylonian cuneiform numeral system is a base-60 system and lacks a zero digit. It’s a positional numeral system in which the position of a digit affects its value. The Roman numeral system is a base-10 system and lacks a zero digit. It’s a non-positional numeral system in which the position of a digit does not affect its value. The student wants to emphasize a difference between the two numeral systems. Which choice most effectively uses relevant information from the notes to accomplish this goal?",
+    "Babylonian cuneiform numerals and Roman numerals are two writing systems for expressing numbers.",
+    "The Roman numeral system is a base-10 non-positional system that lacks a zero digit.",
+    "One system for expressing numbers is Babylonian cuneiform; however, another one is the Roman numeral system."
+  ],
+  "correct_answer": "D",
+  "explanation": "",
+  "media_json": "[]"
+}

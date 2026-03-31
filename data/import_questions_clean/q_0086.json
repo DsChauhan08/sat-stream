@@ -1,0 +1,18 @@
+{
+  "source": "Barrons Diagnostic RW Module1",
+  "section": "english",
+  "domain": "Standard English Conventions",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "Kamini wants to make money from recycling aluminum cans and glass bottles. Her local government pays her $0.10 per can and $0.16 for each bottle. If she wants to earn a total of at least $100 and has collected a total of 600 cans, what is the minimum number of bottles she would need to collect to reach her goal?",
+  "options": [
+    "250",
+    "270",
+    "300",
+    "420"
+  ],
+  "correct_answer": "D",
+  "explanation": "",
+  "media_json": "[]"
+}

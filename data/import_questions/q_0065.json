@@ -1,0 +1,18 @@
+{
+  "source": "Princeton Test1 Math Module1",
+  "section": "math",
+  "domain": "Algebra",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "The use of pesticides in agriculture poses risks to both humans and the environment, so finding alternative methods of pest control is an important area of research. The use of ants to control pests in China goes back to at least the 4th century CE, and farmers in places such as Kenya, Ghana, and Canada have also used ants to control various organisms. Entomologist Diego Anjos and others have identified several positive effects (services) of ants, such as reducing both the abundance of non-honeydew-producing species and plant damage. However, ants also have negative effects, such as increasing the abundance of honeydew-producing species and spreading pathogens, suggesting that __________.",
+  "options": [
+    "ants may have unintended environmental consequences when used to control pests in certain circumstances.",
+    "other species may also be effective in providing services to farmers.",
+    "ants as pest control provide numerous services without serious ramifications.",
+    "scientists do not yet know whether using ants to control organisms is a net positive in any situation."
+  ],
+  "correct_answer": "A",
+  "explanation": "",
+  "media_json": "[]"
+}

@@ -1,0 +1,18 @@
+{
+  "source": "Princeton Test1 RW Module2",
+  "section": "english",
+  "domain": "Craft and Structure",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "German-Dutch paleontologist Ralph von Koenigswald was the first to discover the fossilized remains of Gigantopithecus blacki, a gargantuan ape believed to have lived during the Pleistocene Epoch. Because the fossils were exclusively found in caves in southern China, many experts believe that the species was __________ that region— that is, anyone claiming to have found remains of Gigantopithecus elsewhere would be mistaken.",
+  "options": [
+    "restricted to",
+    "eliminated from",
+    "common in",
+    "unknown to"
+  ],
+  "correct_answer": "B",
+  "explanation": "",
+  "media_json": "[]"
+}

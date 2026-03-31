@@ -1,0 +1,18 @@
+{
+  "source": "Barrons Diagnostic RW Module1",
+  "section": "english",
+  "domain": "Information and Ideas",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "At a certain college, 27% of all students majored in science or mathematics. If there were a total of 4,000 students at the college, how many of the students would have a science or mathematics major?",
+  "options": [
+    "1,080",
+    "2,920",
+    "14,815",
+    "108,000"
+  ],
+  "correct_answer": "D",
+  "explanation": "",
+  "media_json": "[]"
+}

@@ -1,0 +1,18 @@
+{
+  "source": "Princeton Test1 RW Module2",
+  "section": "english",
+  "domain": "Expression of Ideas",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "Scientists at the University of Illinois and the University of Lancaster observed that plants under very bright sunlight enter a protective mode for several minutes, during which they stop photosynthesizing and growing. If the crops were genetically modified to have a shorter time in protective mode, __________ The scientists resolved to find out.",
+  "options": [
+    "could the crop yield increase?",
+    "the crop yield could increase?",
+    "the crop yield could increase.",
+    "could the crop yield increase."
+  ],
+  "correct_answer": "D",
+  "explanation": "",
+  "media_json": "[]"
+}

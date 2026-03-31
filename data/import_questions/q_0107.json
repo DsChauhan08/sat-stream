@@ -1,0 +1,18 @@
+{
+  "source": "Barrons Diagnostic RW Module1",
+  "section": "english",
+  "domain": "Information and Ideas",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "The height in inches and weight in pounds for several female orangutans is graphed in the scatterplot above. Based on the data in the graph, which of these statements best summarizes the overall trend in the data?",
+  "options": [
+    "The greater the height of the orangutan, the greater the weight.",
+    "The lower the height of the orangutan, the greater the weight.",
+    "The greater the height of the orangutan, the lower the weight.",
+    "The height and the weight of the orangutan are equivalent"
+  ],
+  "correct_answer": "A",
+  "explanation": "",
+  "media_json": "[]"
+}

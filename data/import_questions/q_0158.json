@@ -1,0 +1,18 @@
+{
+  "source": "Barrons Practice1 Math Module2",
+  "section": "math",
+  "domain": "Problem Solving & Data Analysis",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "Mark consistently sleeps for 8 hours per day. Which expression gives the number of hours that Mark would sleep in W weeks?",
+  "options": [
+    "56 × W",
+    "8×W",
+    "8+W",
+    "56 + W"
+  ],
+  "correct_answer": "B",
+  "explanation": "",
+  "media_json": "[]"
+}

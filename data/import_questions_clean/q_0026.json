@@ -1,0 +1,18 @@
+{
+  "source": "Princeton Test1 RW Module1",
+  "section": "english",
+  "domain": "Expression of Ideas",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "While researching a topic, a student has taken the following notes: Archaeologists studied the burial of an individual at the Newen Antug site in Argentinian Patagonia. The individual was buried in a wooden structure over 800 years ago. An analysis of the structure revealed that it was carved from a tree with excellent buoyancy. The wooden structure was a canoe, suggesting that canoes were used as coffins at that time. The student wants to present the Newen Antug study and its conclusions.",
+  "options": [
+    "The burial site of an individual over 800 years ago was found at the Newen Antug site in Argentinian Patagonia.",
+    "Archaeologists studied the burial site of an individual who was buried at the Newen Antug site over 800 years ago.",
+    "An analysis of a burial site at the Newen Antug site in Argentinian Patagonia provided evidence that canoes were used as coffins over 800 years ago.",
+    "As part of a study of a burial site at the Newen Antug site in Argentinian Patagonia, a wooden structure buried with an individual was analyzed."
+  ],
+  "correct_answer": "C",
+  "explanation": "",
+  "media_json": "[]"
+}

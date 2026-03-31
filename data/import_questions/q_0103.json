@@ -1,0 +1,18 @@
+{
+  "source": "Barrons Diagnostic RW Module1",
+  "section": "english",
+  "domain": "Expression of Ideas",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "The student wants to introduce the concept of AQ to an audience already familiar with the concept of IQ.",
+  "options": [
+    "In contrast to IQ, AQ examines the personal characteristic most",
+    "important to personal success.",
+    "Unlike IQ, AQ is less focused on intelligence and more on",
+    "personal grit when faced with adversity."
+  ],
+  "correct_answer": "A",
+  "explanation": "",
+  "media_json": "[]"
+}

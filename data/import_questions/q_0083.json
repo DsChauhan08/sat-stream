@@ -1,0 +1,18 @@
+{
+  "source": "Barrons Diagnostic RW Module1",
+  "section": "english",
+  "domain": "Expression of Ideas",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "The student wants to suggest a charitable cause that would be a good candidate for the approach of Effective Altruism.",
+  "options": [
+    "Marching in a local parade to encourage the world to seek out",
+    "peaceful resolutions to warfare.",
+    "Encouraging museum donors to purchase an additional sculpture",
+    "for the largest wing of the museum."
+  ],
+  "correct_answer": "B",
+  "explanation": "",
+  "media_json": "[]"
+}

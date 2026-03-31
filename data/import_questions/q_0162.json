@@ -1,0 +1,18 @@
+{
+  "source": "Barrons Practice1 Math Module2",
+  "section": "math",
+  "domain": "Geometry & Trigonometry",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "In the xy-plane, which of these equations would represent the graph of y = x2 − 4 shifted upward five units?",
+  "options": [
+    "y = x2 − 5",
+    "y = x2 − 1",
+    "y = x2 + 1",
+    "y = 5 x2 − 4"
+  ],
+  "correct_answer": "B",
+  "explanation": "",
+  "media_json": "[]"
+}

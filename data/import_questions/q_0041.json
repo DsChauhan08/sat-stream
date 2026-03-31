@@ -1,0 +1,18 @@
+{
+  "source": "Princeton Test1 RW Module2",
+  "section": "english",
+  "domain": "Standard English Conventions",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "The door-in-the-face technique involves initially making an outrageous or unappealing request or offer, which the other person is highly likely to refuse, then following up with a more reasonable one. The subject is more likely to look favorably upon this second request or offer because it seems acceptable compared to the initial proposition. So, if an employee wants the best raise in annual salary from her boss that she can get, she might succeed by asking for a __________.",
+  "options": [
+    "50% raise, then asking for a 5% raise.",
+    "3% raise, then asking for a 2% raise.",
+    "10% raise, then asking for a 50% raise.",
+    "3% raise, then asking for a 3% raise again."
+  ],
+  "correct_answer": "C",
+  "explanation": "",
+  "media_json": "[]"
+}

@@ -1,0 +1,18 @@
+{
+  "source": "Princeton Test1 RW Module2",
+  "section": "english",
+  "domain": "Standard English Conventions",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "American chef Alice Waters is well-known for opening the restaurant Chez Panisse, which __________ the farm-to-table movement by serving local and seasonal food.",
+  "options": [
+    "originating",
+    "to originate",
+    "having originated",
+    "originated"
+  ],
+  "correct_answer": "C",
+  "explanation": "",
+  "media_json": "[]"
+}

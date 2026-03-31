@@ -1,0 +1,18 @@
+{
+  "source": "Princeton Test1 Math Module1",
+  "section": "math",
+  "domain": "Algebra",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "Neurologists have hypothesized that tau protein, the mutation of which is known to cause Alzheimer’s disease, is key to controlling glutamate receptors, which are involved in the production of memories. Tau protein does not directly affect glutamate receptors but does inhibit NSF, an enzyme found in the brain. Which finding, if true, would most directly support the neurologists’ hypothesis?",
+  "options": [
+    "Other studies have shown that an excess of NSF has been shown to lead to abnormal glutamate receptor behavior.",
+    "Patients with Alzheimer’s disease have been found to have an excess of NSF in their brains during autopsies.",
+    "Neurologists do not yet know what causes mutations of tau protein; one hypothesis is that disease leads to these mutations.",
+    "Other types of dementia are not caused by mutations in tau protein but rather physical damage to the brain."
+  ],
+  "correct_answer": "A",
+  "explanation": "",
+  "media_json": "[]"
+}

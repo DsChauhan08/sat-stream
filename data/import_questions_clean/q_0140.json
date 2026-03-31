@@ -1,0 +1,18 @@
+{
+  "source": "Barrons Practice1 Math Module2",
+  "section": "math",
+  "domain": "Geometry & Trigonometry",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "After a presidential debate, viewers could go to an online poll and vote for which of the two candidates they thought won the debate. Approximately 2,500 viewers chose to fill out responses. Would the results from the online poll provide an accurate representation of opinions of all likely voters as to whom they thought won the debate?",
+  "options": [
+    "Yes, because the sample of viewers was random.",
+    "Yes, because the number of respondents was sufficiently large.",
+    "No, because the respondents were self-selected instead of",
+    "randomly selected."
+  ],
+  "correct_answer": "D",
+  "explanation": "",
+  "media_json": "[]"
+}

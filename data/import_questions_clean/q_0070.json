@@ -1,0 +1,18 @@
+{
+  "source": "Princeton Test1 Math Module2",
+  "section": "math",
+  "domain": "Geometry & Trigonometry",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "What is the measure of angle F in the triangle DEF, where angle D is 73° and angle E is 35°?",
+  "options": [
+    "38°",
+    "72°",
+    "108°",
+    "126°"
+  ],
+  "correct_answer": "B",
+  "explanation": "",
+  "media_json": "[]"
+}

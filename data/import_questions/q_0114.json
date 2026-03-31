@@ -1,0 +1,18 @@
+{
+  "source": "Barrons Diagnostic Math Module1",
+  "section": "math",
+  "domain": "Algebra",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "The graph of a line in the x-y plane is totally vertical and has a negative x- intercept. Which of the following could represent a line with these conditions?",
+  "options": [
+    "x = −5",
+    "y = −4",
+    "y = −x − 2",
+    "x = −4y 4"
+  ],
+  "correct_answer": "A",
+  "explanation": "",
+  "media_json": "[]"
+}

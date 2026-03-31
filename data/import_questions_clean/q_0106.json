@@ -1,0 +1,18 @@
+{
+  "source": "Barrons Diagnostic RW Module1",
+  "section": "english",
+  "domain": "Information and Ideas",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "If the city of Detroit has a population of 4,900 persons per square mile, and there are 139 square miles of land within the city, what would most closely approximate the total population of the city?",
+  "options": [
+    "35,000",
+    "47,000",
+    "681,000",
+    "1,240,000"
+  ],
+  "correct_answer": "B",
+  "explanation": "",
+  "media_json": "[]"
+}

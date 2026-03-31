@@ -1,0 +1,18 @@
+{
+  "source": "Barrons Diagnostic RW Module1",
+  "section": "english",
+  "domain": "Standard English Conventions",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "What values of x would make the product of and undefined?",
+  "options": [
+    "0 only",
+    "− 1 only",
+    "0 and 1 only",
+    "− 1 and 0 only 21"
+  ],
+  "correct_answer": "A",
+  "explanation": "",
+  "media_json": "[]"
+}

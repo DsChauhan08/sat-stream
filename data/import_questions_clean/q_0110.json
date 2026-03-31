@@ -1,0 +1,18 @@
+{
+  "source": "Barrons Diagnostic RW Module1",
+  "section": "english",
+  "domain": "Expression of Ideas",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "Triangles ABC and DEF both have sides of length 6 and 7 as shown above. Which of the following would, if true, be sufficient to prove that the triangles are congruent?",
+  "options": [
+    "That angle BAC equals angle DEF",
+    "That angle CBA equals angle EDF",
+    "That angle BAC equals angle DFE",
+    "That angle ABC equals angle FED"
+  ],
+  "correct_answer": "C",
+  "explanation": "",
+  "media_json": "[]"
+}

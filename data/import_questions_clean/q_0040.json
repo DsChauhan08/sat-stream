@@ -1,0 +1,18 @@
+{
+  "source": "Princeton Test1 RW Module2",
+  "section": "english",
+  "domain": "Information and Ideas",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "In the early 1900s, paleontologists largely believed that there were no undocumented prehistoric aquatic species that had survived to the present day because it would be impossible for such a species to have enough animals to sustain a breeding population while escaping detection in the modern era. However, a coelacanth, a large lobe-finned fish universally believed by scientists to have gone extinct sixty-six million years ago, was found off the coast of South Africa as recently as 1938. This event may suggest that __________ .",
+  "options": [
+    "fewer coelacanths are required to sustain a breeding population than was previously thought.",
+    "it is possible for a prehistoric species to go undiscovered for longer than expected.",
+    "the scientists who determined that the coelacanth was extinct ignored critical evidence.",
+    "the same environmental conditions that eliminated the dinosaurs nearly killed off the coelacanths."
+  ],
+  "correct_answer": "B",
+  "explanation": "",
+  "media_json": "[]"
+}

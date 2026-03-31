@@ -1,0 +1,18 @@
+{
+  "source": "Princeton Test1 RW Module1",
+  "section": "english",
+  "domain": "Information and Ideas",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "Neurons respond to stimuli from sensory organs or other neurons. Learning occurs when neurons change how they respond to stimuli based on previous experience, which is a property of memory. Electrical engineers seek to replicate similar processes in their development of computer memory. Recently, research by electrical engineer Mohammad Samizadeh Nikoo has demonstrated that vanadium dioxide (VO2) has a similar memory property to that of neurons, suggesting that __________.",
+  "options": [
+    "VO2 could be used in the development of computer memory.",
+    "neurons use VO2 when forming memories.",
+    "VO2 can learn to respond to stimuli from sensory organs.",
+    "electrical engineers can now use neurons to develop computer memory."
+  ],
+  "correct_answer": "A",
+  "explanation": "",
+  "media_json": "[]"
+}

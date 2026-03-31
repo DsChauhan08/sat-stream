@@ -1,0 +1,18 @@
+{
+  "source": "Barrons Diagnostic Math Module1",
+  "section": "math",
+  "domain": "Advanced Math",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "Suppose the price of a product is typically p dollars. If a 30% discount is applied to the price, what is the discounted price in terms of p?",
+  "options": [
+    "0.03p",
+    "0.3p",
+    "0.7p",
+    "1.3p 11"
+  ],
+  "correct_answer": "C",
+  "explanation": "",
+  "media_json": "[]"
+}

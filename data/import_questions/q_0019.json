@@ -1,0 +1,18 @@
+{
+  "source": "Princeton Test1 RW Module1",
+  "section": "english",
+  "domain": "Standard English Conventions",
+  "sub_domain": "",
+  "difficulty": 2,
+  "passage": "",
+  "question_text": "Chinese artist Xu Bing is known for his art installations that showcase his printmaking skills and his creative use of languages and texts. His 1991 installation A Book from the Sky, for example, consists of volumes and scrolls printed with characters he invented, while his 2004 installation The Glassy Surface of a __________ uses the text of Henry David Thoreau’s Walden to create the illusion of a lake.",
+  "options": [
+    "Lake:",
+    "Lake",
+    "Lake,",
+    "Lake–"
+  ],
+  "correct_answer": "B",
+  "explanation": "",
+  "media_json": "[]"
+}
