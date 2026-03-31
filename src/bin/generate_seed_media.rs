@@ -188,11 +188,11 @@ fn main() -> color_eyre::Result<()> {
     color_eyre::install()?;
 
     let p1 = media_assets::save_png("seed_graph_line_trend.png", &graph_line_trend())
-        .map_err(color_eyre::eyre::eyre)?;
+        .map_err(|e| color_eyre::eyre::eyre!(e))?;
     let p2 = media_assets::save_png("seed_table_income.png", &table_income())
-        .map_err(color_eyre::eyre::eyre)?;
+        .map_err(|e| color_eyre::eyre::eyre!(e))?;
     let p3 = media_assets::save_png("seed_scatterplot.png", &scatterplot())
-        .map_err(color_eyre::eyre::eyre)?;
+        .map_err(|e| color_eyre::eyre::eyre!(e))?;
 
     println!("Generated media:");
     println!("{}", p1);

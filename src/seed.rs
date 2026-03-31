@@ -1,22 +1,27 @@
 use color_eyre::Result;
+use sqlx::Row;
 use sqlx::SqlitePool;
 use crate::db;
+use crate::media_assets;
 
 /// Seed the database with SAT questions if it's empty
 pub async fn seed_if_empty(pool: &SqlitePool) -> Result<()> {
     let count = db::question_count(pool).await?;
-    if count > 0 {
-        return Ok(());
+    let media = media_assets::ensure_seed_media_assets()
+        .map_err(|e| color_eyre::eyre::eyre!(e))?;
+
+    if count == 0 {
+        seed_math_algebra(pool).await?;
+        seed_math_advanced(pool).await?;
+        seed_math_data_analysis(pool, &media).await?;
+        seed_math_geometry(pool).await?;
+        seed_english_craft(pool).await?;
+        seed_english_information(pool).await?;
+        seed_english_conventions(pool).await?;
+        seed_english_expression(pool).await?;
     }
 
-    seed_math_algebra(pool).await?;
-    seed_math_advanced(pool).await?;
-    seed_math_data_analysis(pool).await?;
-    seed_math_geometry(pool).await?;
-    seed_english_craft(pool).await?;
-    seed_english_information(pool).await?;
-    seed_english_conventions(pool).await?;
-    seed_english_expression(pool).await?;
+    seed_media_questions_if_missing(pool, &media).await?;
 
     Ok(())
 }
@@ -104,7 +109,8 @@ async fn seed_math_advanced(pool: &SqlitePool) -> Result<()> {
 }
 
 // ===== MATH: PROBLEM SOLVING & DATA ANALYSIS =====
-async fn seed_math_data_analysis(pool: &SqlitePool) -> Result<()> {
+async fn seed_math_data_analysis(pool: &SqlitePool, media: &media_assets::SeedMediaPaths) -> Result<()> {
+    let _ = media;
     let questions = vec![
         ("A recipe calls for 2 cups of flour for every 3 cups of sugar. If you use 9 cups of sugar, how many cups of flour do you need?", "6", "4.5", "12", "3", "A", "Ratios",
          "2/3 = x/9. x = 6.", 1),
@@ -141,7 +147,110 @@ async fn seed_math_data_analysis(pool: &SqlitePool) -> Result<()> {
     for (q, a, b, c, d, ans, sub, exp, diff) in questions {
         db::insert_question(pool, "math", "Problem Solving & Data Analysis", sub, "SAT-Stream", diff, "", "[]", q, a, b, c, d, ans, exp).await?;
     }
+
     Ok(())
+}
+
+async fn seed_media_questions_if_missing(pool: &SqlitePool, media: &media_assets::SeedMediaPaths) -> Result<()> {
+    let line_stem = "A line graph (open with G) shows monthly output increasing from 120 to 390 units over 7 months. Which statement is best supported?";
+    if !question_exists(pool, line_stem).await? {
+        let line_media = serde_json::json!([
+            {
+                "kind": "image",
+                "path": media.line_trend,
+                "caption": "Line graph of trend over time"
+            }
+        ])
+        .to_string();
+        db::insert_question(
+            pool,
+            "math",
+            "Problem Solving & Data Analysis",
+            "Data Interpretation",
+            "SAT-Stream",
+            2,
+            "",
+            &line_media,
+            line_stem,
+            "The trend is overall increasing",
+            "The trend is overall decreasing",
+            "Output is constant each month",
+            "There is no clear pattern",
+            "A",
+            "The plotted points rise from left to right, indicating an overall increase.",
+        )
+        .await?;
+    }
+
+    let table_stem = "A table (open with G) compares four categories with row totals. Which operation is required to find the proportion in one category relative to the whole table?";
+    if !question_exists(pool, table_stem).await? {
+        let table_media = serde_json::json!([
+            {
+                "kind": "image",
+                "path": media.income_table,
+                "caption": "Income table by category"
+            }
+        ])
+        .to_string();
+        db::insert_question(
+            pool,
+            "math",
+            "Problem Solving & Data Analysis",
+            "Two-way Tables",
+            "SAT-Stream",
+            2,
+            "",
+            &table_media,
+            table_stem,
+            "Category count divided by grand total",
+            "Grand total divided by category count",
+            "Category count minus row total",
+            "Row total minus grand total",
+            "A",
+            "A proportion of a category out of the whole uses category count / grand total.",
+        )
+        .await?;
+    }
+
+    let scatter_stem = "A scatterplot (open with G) includes a positively sloped line of best fit. What does this indicate about the association between x and y?";
+    if !question_exists(pool, scatter_stem).await? {
+        let scatter_media = serde_json::json!([
+            {
+                "kind": "image",
+                "path": media.scatterplot,
+                "caption": "Scatterplot with best-fit line"
+            }
+        ])
+        .to_string();
+        db::insert_question(
+            pool,
+            "math",
+            "Problem Solving & Data Analysis",
+            "Data Interpretation",
+            "SAT-Stream",
+            3,
+            "",
+            &scatter_media,
+            scatter_stem,
+            "As x increases, y tends to increase",
+            "As x increases, y tends to decrease",
+            "x and y are unrelated",
+            "The graph proves causation",
+            "A",
+            "A positive slope indicates a positive association, not causation.",
+        )
+        .await?;
+    }
+
+    Ok(())
+}
+
+async fn question_exists(pool: &SqlitePool, question_text: &str) -> Result<bool> {
+    let row = sqlx::query("SELECT COUNT(*) as cnt FROM questions WHERE question_text = ?1")
+        .bind(question_text)
+        .fetch_one(pool)
+        .await?;
+    Ok(row.get::<i64, _>("cnt") > 0)
 }
 
 // ===== MATH: GEOMETRY & TRIGONOMETRY =====

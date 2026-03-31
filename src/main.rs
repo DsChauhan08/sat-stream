@@ -29,6 +29,42 @@ use tokio::sync::mpsc;
 
 const TICK_RATE: Duration = Duration::from_millis(33); // ~30fps
 
+fn open_question_media(app: &mut App) {
+    if let Some(q) = &app.current_question {
+        if q.media_json != "[]" {
+            match serde_json::from_str::<Vec<serde_json::Value>>(&q.media_json) {
+                Ok(items) => {
+                    let mut shown = false;
+                    for item in items {
+                        let path = item
+                            .get("path")
+                            .and_then(|v| v.as_str())
+                            .unwrap_or_default();
+                        if path.is_empty() {
+                            continue;
+                        }
+                        match show_image_in_kitty(path) {
+                            Ok(_) => {
+                                shown = true;
+                                break;
+                            }
+                            Err(e) => {
+                                app.set_status(&format!("✗ {}", e));
+                            }
+                        }
+                    }
+                    if !shown {
+                        app.set_status("✗ No viewable media for this question");
+                    }
+                }
+                Err(_) => app.set_status("✗ Failed to parse question media payload"),
+            }
+        } else {
+            app.set_status("No media attached to this question");
+        }
+    }
+}
+
 #[tokio::main]
 async fn main() -> Result<()> {
     color_eyre::install()?;
@@ -406,36 +442,7 @@ async fn handle_quiz_keys(app: &mut App, pool: &sqlx::SqlitePool, key: KeyCode) 
     if app.answered {
         match key {
             KeyCode::Char('g') | KeyCode::Char('G') => {
-                if let Some(q) = &app.current_question {
-                    if q.media_json != "[]" {
-                        match serde_json::from_str::<Vec<serde_json::Value>>(&q.media_json) {
-                            Ok(items) => {
-                                let mut shown = false;
-                                for item in items {
-                                    let path = item.get("path").and_then(|v| v.as_str()).unwrap_or_default();
-                                    if path.is_empty() {
-                                        continue;
-                                    }
-                                    match show_image_in_kitty(path) {
-                                        Ok(_) => {
-                                            shown = true;
-                                            break;
-                                        }
-                                        Err(e) => {
-                                            app.set_status(&format!("✗ {}", e));
-                                        }
-                                    }
-                                }
-                                if !shown {
-                                    app.set_status("✗ No viewable media for this question");
-                                }
-                            }
-                            Err(_) => app.set_status("✗ Failed to parse question media payload"),
-                        }
-                    } else {
-                        app.set_status("No media attached to this question");
-                    }
-                }
+                open_question_media(app);
             }
             KeyCode::Enter => {
                 // Only way to go to next question
@@ -485,36 +492,7 @@ async fn handle_quiz_keys(app: &mut App, pool: &sqlx::SqlitePool, key: KeyCode) 
     // ===== STATE 1: Answering the question =====
     match key {
         KeyCode::Char('g') | KeyCode::Char('G') => {
-            if let Some(q) = &app.current_question {
-                if q.media_json != "[]" {
-                    match serde_json::from_str::<Vec<serde_json::Value>>(&q.media_json) {
-                        Ok(items) => {
-                            let mut shown = false;
-                            for item in items {
-                                let path = item.get("path").and_then(|v| v.as_str()).unwrap_or_default();
-                                if path.is_empty() {
-                                    continue;
-                                }
-                                match show_image_in_kitty(path) {
-                                    Ok(_) => {
-                                        shown = true;
-                                        break;
-                                    }
-                                    Err(e) => {
-                                        app.set_status(&format!("✗ {}", e));
-                                    }
-                                }
-                            }
-                            if !shown {
-                                app.set_status("✗ No viewable media for this question");
-                            }
-                        }
-                        Err(_) => app.set_status("✗ Failed to parse question media payload"),
-                    }
-                } else {
-                    app.set_status("No media attached to this question");
-                }
-            }
+            open_question_media(app);
         }
         // Scroll passage with Page Up/Down
         KeyCode::PageUp => {

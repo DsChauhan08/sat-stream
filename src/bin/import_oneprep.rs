@@ -1,5 +1,6 @@
 use sat_stream::config::Config;
 use sat_stream::db;
+use sat_stream::media_assets;
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 use std::fs;
@@ -138,22 +139,22 @@ fn load_question_json(path: &Path) -> Option<OnePrepQuestion> {
 
     // Extract any media URLs from stimulus or stem HTML if present
     let mut media = Vec::<serde_json::Value>::new();
+    let re_plain = regex::Regex::new(r#"src="([^"]+)""#).ok()?;
+    let re_escaped = regex::Regex::new(r#"src=\\"([^\\"]+)\\""#).ok()?;
     for blob in [&stimulus, &stem] {
-        // crude but robust extraction for src="..."
-        for cap in regex::Regex::new(r#"src=\"([^\"]+)\""#)
-            .ok()?
-            .captures_iter(blob)
-        {
-            let src = cap.get(1).map(|m| m.as_str()).unwrap_or_default();
-            if src.is_empty() {
-                continue;
+        for re in [&re_plain, &re_escaped] {
+            for cap in re.captures_iter(blob) {
+                let src = cap.get(1).map(|m| m.as_str()).unwrap_or_default();
+                if src.is_empty() {
+                    continue;
+                }
+                media.push(serde_json::json!({
+                    "kind": "image",
+                    "url": src,
+                    "path": "",
+                    "caption": "Imported from OnePrep"
+                }));
             }
-            media.push(serde_json::json!({
-                "kind": "image",
-                "url": src,
-                "path": "",
-                "caption": "Imported from OnePrep"
-            }));
         }
     }
 
@@ -169,6 +170,76 @@ fn load_question_json(path: &Path) -> Option<OnePrepQuestion> {
         media_json: serde_json::to_string(&media).unwrap_or_else(|_| "[]".to_string()),
         source_id,
     })
+}
+
+fn normalize_media_url(url: &str) -> String {
+    if url.starts_with("http://") || url.starts_with("https://") {
+        return url.to_string();
+    }
+    if url.starts_with('/') {
+        return format!("https://www.oneprep.xyz{}", url);
+    }
+    format!("https://www.oneprep.xyz/{}", url)
+}
+
+fn file_ext_from_url(url: &str) -> &'static str {
+    let lower = url.to_lowercase();
+    if lower.contains(".jpg") || lower.contains(".jpeg") {
+        "jpg"
+    } else if lower.contains(".webp") {
+        "webp"
+    } else if lower.contains(".gif") {
+        "gif"
+    } else {
+        "png"
+    }
+}
+
+async fn download_media_locally(source_id: &str, media_json: &str) -> String {
+    let mut items: Vec<serde_json::Value> = match serde_json::from_str(media_json) {
+        Ok(v) => v,
+        Err(_) => return media_json.to_string(),
+    };
+    if items.is_empty() {
+        return media_json.to_string();
+    }
+
+    let dir = match media_assets::ensure_media_dir() {
+        Ok(d) => d,
+        Err(_) => return media_json.to_string(),
+    };
+
+    for (idx, item) in items.iter_mut().enumerate() {
+        let Some(url) = item.get("url").and_then(|v| v.as_str()) else {
+            continue;
+        };
+        if url.is_empty() {
+            continue;
+        }
+        let full_url = normalize_media_url(url);
+        let Ok(resp) = reqwest::get(&full_url).await else {
+            continue;
+        };
+        if !resp.status().is_success() {
+            continue;
+        }
+        let Ok(bytes) = resp.bytes().await else {
+            continue;
+        };
+
+        let filename = format!(
+            "oneprep_{}_{}.{}",
+            source_id.replace('/', "_"),
+            idx,
+            file_ext_from_url(&full_url)
+        );
+        let path = dir.join(filename);
+        if fs::write(&path, &bytes).is_ok() {
+            item["path"] = serde_json::Value::String(path.to_string_lossy().to_string());
+        }
+    }
+
+    serde_json::to_string(&items).unwrap_or_else(|_| media_json.to_string())
 }
 
 #[tokio::main]
@@ -247,6 +318,8 @@ async fn main() -> color_eyre::Result<()> {
         let passage = q.stimulus;
         let stem = q.stem;
 
+        let media_json_local = download_media_locally(&q.source_id, &q.media_json).await;
+
         db::insert_question(
             &pool,
             section,
@@ -255,7 +328,7 @@ async fn main() -> color_eyre::Result<()> {
             &format!("OnePrep ({})", q.source_id),
             q.difficulty,
             &passage,
-            &q.media_json,
+            &media_json_local,
             &stem,
             &q.choices[0].text,
             &q.choices[1].text,
