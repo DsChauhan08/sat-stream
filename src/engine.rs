@@ -141,7 +141,7 @@ pub async fn generate_mock_module(
 
     let query = format!(
         "SELECT id, section, domain, sub_domain, source, difficulty, \
-         question_text, option_a, option_b, option_c, option_d, \
+         passage, question_text, option_a, option_b, option_c, option_d, \
          correct_answer, explanation FROM questions \
          WHERE section = '{}' AND {} \
          ORDER BY RANDOM() LIMIT {}",

@@ -90,16 +90,35 @@ pub fn render(frame: &mut Frame, app: &App, area: Rect) {
         );
     frame.render_widget(meta, chunks[0]);
 
-    // Question text
-    let q_text = Paragraph::new(vec![
-        Line::from(""),
-        Line::from(vec![Span::styled(
-            format!("  {}", question.question_text),
-            Style::default().fg(theme.text()),
-        )]),
-    ])
-    .wrap(Wrap { trim: false })
-    .block(
+    // Question text (with passage if present)
+    let mut q_lines: Vec<Line> = Vec::new();
+
+    if !question.passage.is_empty() {
+        q_lines.push(Line::from(vec![Span::styled(
+            "  ── Passage ──",
+            Style::default().fg(theme.dim()),
+        )]));
+        for line in question.passage.split('\n') {
+            q_lines.push(Line::from(vec![Span::styled(
+                format!("  {}", line),
+                Style::default()
+                    .fg(theme.text())
+                    .add_modifier(Modifier::ITALIC),
+            )]));
+        }
+        q_lines.push(Line::from(vec![Span::styled(
+            "  ─────────────",
+            Style::default().fg(theme.dim()),
+        )]));
+        q_lines.push(Line::from(""));
+    }
+
+    q_lines.push(Line::from(vec![Span::styled(
+        format!("  {}", question.question_text),
+        Style::default().fg(theme.text()),
+    )]));
+
+    let q_text = Paragraph::new(q_lines).wrap(Wrap { trim: false }).block(
         Block::default()
             .borders(Borders::ALL)
             .border_style(Style::default().fg(theme.dim()))

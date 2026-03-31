@@ -44,7 +44,7 @@ pub fn render(frame: &mut Frame, app: &App, area: Rect) {
         .direction(Direction::Vertical)
         .constraints([
             Constraint::Length(3),  // Question metadata
-            Constraint::Min(6),     // Question text
+            Constraint::Min(6),     // Question text (or passage + question)
             Constraint::Length(10), // Options
             Constraint::Length(5),  // Feedback / AI response area
         ])
@@ -95,28 +95,55 @@ pub fn render(frame: &mut Frame, app: &App, area: Rect) {
     );
     frame.render_widget(meta, chunks[0]);
 
-    // Question text
-    let q_text = Paragraph::new(vec![
-        Line::from(""),
-        Line::from(vec![Span::styled(
-            format!("  {}", question.question_text),
-            Style::default().fg(theme.text()),
-        )]),
-    ])
-    .wrap(Wrap { trim: false })
-    .block(
-        Block::default()
-            .borders(Borders::ALL)
-            .border_style(Style::default().fg(border_color))
-            .title(" Question ")
-            .title_style(
+    // Question text (with passage if present)
+    let mut q_lines: Vec<Line> = Vec::new();
+
+    if !question.passage.is_empty() {
+        // Show passage in a distinct style
+        q_lines.push(Line::from(vec![Span::styled(
+            "  ── Passage ──────────────────────────────────",
+            Style::default().fg(theme.dim()),
+        )]));
+        for line in question.passage.split('\n') {
+            q_lines.push(Line::from(vec![Span::styled(
+                format!("  {}", line),
                 Style::default()
-                    .fg(border_color)
-                    .add_modifier(Modifier::BOLD),
-            )
-            .padding(Padding::horizontal(1))
-            .style(Style::default().bg(theme.surface())),
-    );
+                    .fg(theme.text())
+                    .add_modifier(Modifier::ITALIC),
+            )]));
+        }
+        q_lines.push(Line::from(vec![Span::styled(
+            "  ─────────────────────────────────────────────",
+            Style::default().fg(theme.dim()),
+        )]));
+        q_lines.push(Line::from(""));
+    }
+
+    q_lines.push(Line::from(vec![Span::styled(
+        format!("  {}", question.question_text),
+        Style::default().fg(theme.text()),
+    )]));
+
+    let q_text = Paragraph::new(q_lines)
+        .wrap(Wrap { trim: false })
+        .scroll((app.passage_scroll, 0))
+        .block(
+            Block::default()
+                .borders(Borders::ALL)
+                .border_style(Style::default().fg(border_color))
+                .title(if question.passage.is_empty() {
+                    " Question ".to_string()
+                } else {
+                    format!(" Question (↑↓ scroll) ")
+                })
+                .title_style(
+                    Style::default()
+                        .fg(border_color)
+                        .add_modifier(Modifier::BOLD),
+                )
+                .padding(Padding::horizontal(1))
+                .style(Style::default().bg(theme.surface())),
+        );
     frame.render_widget(q_text, chunks[1]);
 
     // Answer options (use shuffled if available)

@@ -34,6 +34,11 @@ pub async fn init_db(db_path: &str) -> Result<SqlitePool> {
         .await
         .ok(); // Ignore if tables already exist
 
+    sqlx::query(include_str!("../migrations/002_add_passage.sql"))
+        .execute(&pool)
+        .await
+        .ok(); // Ignore if column already exists
+
     Ok(pool)
 }
 
@@ -53,7 +58,7 @@ pub async fn get_random_question(
 ) -> Result<Option<Question>> {
     let mut query = String::from(
         "SELECT id, section, domain, sub_domain, source, difficulty, \
-         question_text, option_a, option_b, option_c, option_d, \
+         passage, question_text, option_a, option_b, option_c, option_d, \
          correct_answer, explanation FROM questions"
     );
     let mut conditions = Vec::new();
@@ -87,7 +92,7 @@ pub async fn get_random_question(
 pub async fn get_due_questions(pool: &SqlitePool, limit: i64) -> Result<Vec<Question>> {
     let rows = sqlx::query_as::<_, QuestionRow>(
         "SELECT q.id, q.section, q.domain, q.sub_domain, q.source, q.difficulty, \
-         q.question_text, q.option_a, q.option_b, q.option_c, q.option_d, \
+         q.passage, q.question_text, q.option_a, q.option_b, q.option_c, q.option_d, \
          q.correct_answer, q.explanation \
          FROM questions q \
          INNER JOIN spaced_repetition sr ON q.id = sr.question_id \
@@ -315,6 +320,7 @@ pub async fn insert_question(
     sub_domain: &str,
     source: &str,
     difficulty: i64,
+    passage: &str,
     question_text: &str,
     option_a: &str,
     option_b: &str,
@@ -325,14 +331,15 @@ pub async fn insert_question(
 ) -> Result<()> {
     sqlx::query(
         "INSERT INTO questions (section, domain, sub_domain, source, difficulty, \
-         question_text, option_a, option_b, option_c, option_d, correct_answer, explanation) \
-         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12)"
+         passage, question_text, option_a, option_b, option_c, option_d, correct_answer, explanation) \
+         VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13)"
     )
     .bind(section)
     .bind(domain)
     .bind(sub_domain)
     .bind(source)
     .bind(difficulty)
+    .bind(passage)
     .bind(question_text)
     .bind(option_a)
     .bind(option_b)
@@ -354,6 +361,7 @@ pub struct QuestionRow {
     sub_domain: String,
     source: String,
     difficulty: i64,
+    passage: String,
     question_text: String,
     option_a: String,
     option_b: String,
@@ -372,6 +380,7 @@ impl From<QuestionRow> for Question {
             sub_domain: r.sub_domain,
             source: r.source,
             difficulty: r.difficulty,
+            passage: r.passage,
             question_text: r.question_text,
             option_a: r.option_a,
             option_b: r.option_b,

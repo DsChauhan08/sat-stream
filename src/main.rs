@@ -449,6 +449,13 @@ async fn handle_quiz_keys(app: &mut App, pool: &sqlx::SqlitePool, key: KeyCode) 
 
     // ===== STATE 1: Answering the question =====
     match key {
+        // Scroll passage with Page Up/Down
+        KeyCode::PageUp => {
+            app.passage_scroll = app.passage_scroll.saturating_sub(3);
+        }
+        KeyCode::PageDown => {
+            app.passage_scroll = app.passage_scroll.saturating_add(3);
+        }
         // Navigate options with arrow keys or j/k
         KeyCode::Up | KeyCode::Char('k') => {
             if app.selected_answer > 0 {
@@ -763,6 +770,7 @@ async fn load_question(app: &mut App, pool: &sqlx::SqlitePool) {
             app.ai_response = None;
             app.ai_receiver = None;
             app.ai_loading = false;
+            app.passage_scroll = 0;
 
             // Set up timer if timed mode
             if app.config.timed_mode {

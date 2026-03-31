@@ -131,6 +131,7 @@ pub struct Question {
     pub sub_domain: String,
     pub source: String,
     pub difficulty: i64,
+    pub passage: String,
     pub question_text: String,
     pub option_a: String,
     pub option_b: String,

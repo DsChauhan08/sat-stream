@@ -98,6 +98,7 @@ pub struct App {
     pub stats_scroll: u16,
     pub review_scroll: u16,
     pub ai_scroll: u16,
+    pub passage_scroll: u16,
     pub wrong_answers: Vec<(Question, String)>, // (question, user_answer)
 
     // Mode selection
@@ -165,6 +166,7 @@ impl App {
             stats_scroll: 0,
             review_scroll: 0,
             ai_scroll: 0,
+            passage_scroll: 0,
             wrong_answers: Vec::new(),
 
             mode_selector_open: false,

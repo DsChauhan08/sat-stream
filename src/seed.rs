@@ -57,7 +57,7 @@ async fn seed_math_algebra(pool: &SqlitePool) -> Result<()> {
     ];
 
     for (q, a, b, c, d, ans, sub, exp, diff) in questions {
-        db::insert_question(pool, "math", "Algebra", sub, "SAT-Stream", diff, q, a, b, c, d, ans, exp).await?;
+        db::insert_question(pool, "math", "Algebra", sub, "SAT-Stream", diff, "", q, a, b, c, d, ans, exp).await?;
     }
     Ok(())
 }
@@ -98,7 +98,7 @@ async fn seed_math_advanced(pool: &SqlitePool) -> Result<()> {
     ];
 
     for (q, a, b, c, d, ans, sub, exp, diff) in questions {
-        db::insert_question(pool, "math", "Advanced Math", sub, "SAT-Stream", diff, q, a, b, c, d, ans, exp).await?;
+        db::insert_question(pool, "math", "Advanced Math", sub, "SAT-Stream", diff, "", q, a, b, c, d, ans, exp).await?;
     }
     Ok(())
 }
@@ -139,7 +139,7 @@ async fn seed_math_data_analysis(pool: &SqlitePool) -> Result<()> {
     ];
 
     for (q, a, b, c, d, ans, sub, exp, diff) in questions {
-        db::insert_question(pool, "math", "Problem Solving & Data Analysis", sub, "SAT-Stream", diff, q, a, b, c, d, ans, exp).await?;
+        db::insert_question(pool, "math", "Problem Solving & Data Analysis", sub, "SAT-Stream", diff, "", q, a, b, c, d, ans, exp).await?;
     }
     Ok(())
 }
@@ -180,89 +180,146 @@ async fn seed_math_geometry(pool: &SqlitePool) -> Result<()> {
     ];
 
     for (q, a, b, c, d, ans, sub, exp, diff) in questions {
-        db::insert_question(pool, "math", "Geometry & Trigonometry", sub, "SAT-Stream", diff, q, a, b, c, d, ans, exp).await?;
+        db::insert_question(pool, "math", "Geometry & Trigonometry", sub, "SAT-Stream", diff, "", q, a, b, c, d, ans, exp).await?;
     }
     Ok(())
 }
 
 // ===== ENGLISH: CRAFT AND STRUCTURE =====
 async fn seed_english_craft(pool: &SqlitePool) -> Result<()> {
+    let passage1 = "The fleeting nature of artistic fame has long fascinated cultural historians. Many painters \
+                    whose works once commanded enormous prices now languish in obscurity, their canvases gathering \
+                    dust in basement storage rooms of minor museums. This ephemeral quality of renown raises \
+                    profound questions about the mechanisms by which societies assign value to creative endeavors. \
+                    A luminous example of this phenomenon can be found in the Dutch tulip mania of the 1630s, \
+                    when a single bulb could sell for more than a house in Amsterdam. The unprecedented collapse \
+                    that followed left speculators ruined and historians baffled. Today, ubiquitous references to \
+                    the tulip craze serve as a cautionary tale about the cultivated illusion of permanent value.";
+
+    let passage2 = "Recent studies in cognitive neuroscience have fundamentally altered our understanding of \
+                    how the brain processes language. Researchers at the Institute for Neural Mapping have \
+                    demonstrated that reading activates not just the language centers, but also motor and sensory \
+                    cortices previously thought to be unrelated to comprehension. The implications of this \
+                    finding are significant: when we read about a character running, our motor cortex exhibits \
+                    patterns similar to those observed during actual physical activity. This embodied cognition \
+                    theory challenges the traditional view that reading is a purely abstract mental process. \
+                    Critics, however, argue that the sample sizes in these studies remain too small to draw \
+                    definitive conclusions about the broader population.";
+
+    let passage3 = "Dr. Elena Vasquez's research on urban pollinators represents a convergence of ecology \
+                    and data science that would have been unimaginable a generation ago. Her team deployed \
+                    thousands of sensors across metropolitan areas to track bee populations in real time, \
+                    generating terabytes of data that required novel computational approaches to analyze. \
+                    The findings painted a troubling picture: urban bee populations had declined by 47% \
+                    over the preceding decade, a statistic that could have cascading effects on food production. \
+                    Vasquez's methodology, which combined traditional fieldwork with machine learning, became \
+                    a model for interdisciplinary research. As she noted in a 2019 interview, the technology \
+                    involved was a double-edged sword—enabling unprecedented data collection while also \
+                    requiring expertise that few ecologists possessed.";
+
     let questions = vec![
-        ("In the passage, the word 'ephemeral' most nearly means:", "short-lived", "eternal", "beautiful", "mysterious", "A", "Words in Context",
+        (passage1, "In the passage, the word 'ephemeral' most nearly means:", "short-lived", "eternal", "beautiful", "mysterious", "A", "Words in Context",
          "'Ephemeral' means lasting for a very short time.", 1),
-        ("The author's use of the word 'luminous' to describe the character's smile suggests:", "It was bright and radiant", "It was dim and fading", "It was fake", "It was brief", "A", "Words in Context",
+        (passage1, "The author's use of the word 'luminous' to describe the character's smile suggests:", "It was bright and radiant", "It was dim and fading", "It was fake", "It was brief", "A", "Words in Context",
          "'Luminous' means full of light, suggesting brightness and warmth.", 1),
-        ("The main purpose of the second paragraph is to:", "Provide evidence supporting the thesis", "Introduce a counterargument", "Define a key term", "Summarize the conclusion", "A", "Text Structure",
+        (passage2, "The main purpose of the second paragraph is to:", "Provide evidence supporting the thesis", "Introduce a counterargument", "Define a key term", "Summarize the conclusion", "A", "Text Structure",
          "In expository writing, body paragraphs typically provide evidence for the main claim.", 2),
-        ("Which choice best describes the overall structure of the passage?", "A claim followed by supporting evidence", "A chronological narrative", "A comparison of two theories", "A series of rhetorical questions", "A", "Text Structure",
+        (passage2, "Which choice best describes the overall structure of the passage?", "A claim followed by supporting evidence", "A chronological narrative", "A comparison of two theories", "A series of rhetorical questions", "A", "Text Structure",
          "Academic passages commonly present a thesis/claim and support it with evidence.", 2),
-        ("The tone of the passage is best described as:", "Analytical and objective", "Passionate and emotional", "Sarcastic and dismissive", "Nostalgic and wistful", "A", "Author's Purpose",
+        (passage2, "The tone of the passage is best described as:", "Analytical and objective", "Passionate and emotional", "Sarcastic and dismissive", "Nostalgic and wistful", "A", "Author's Purpose",
          "Scientific and academic passages typically maintain an analytical, objective tone.", 2),
-        ("In this context, the word 'unprecedented' most nearly means:", "Never having happened before", "Very old", "Widely expected", "Commonly seen", "A", "Words in Context",
+        (passage1, "In this context, the word 'unprecedented' most nearly means:", "Never having happened before", "Very old", "Widely expected", "Commonly seen", "A", "Words in Context",
          "'Unprecedented' literally means without precedent; never done or known before.", 1),
-        ("The author mentions the 1920s study primarily to:", "Provide historical context for the current research", "Disprove the main argument", "Entertain the reader", "Change the subject", "A", "Text Purpose",
+        (passage2, "The author mentions the 1920s study primarily to:", "Provide historical context for the current research", "Disprove the main argument", "Entertain the reader", "Change the subject", "A", "Text Purpose",
          "Authors cite historical studies to contextualize current findings.", 2),
-        ("The word 'ubiquitous' as used in the passage most likely means:", "Found everywhere", "Extremely rare", "Highly valued", "Recently discovered", "A", "Words in Context",
+        (passage1, "The word 'ubiquitous' as used in the passage most likely means:", "Found everywhere", "Extremely rare", "Highly valued", "Recently discovered", "A", "Words in Context",
          "'Ubiquitous' means present, appearing, or found everywhere.", 2),
-        ("The passage primarily serves to:", "Argue that traditional methods are superior", "Present findings from a recent study", "Compare two competing theories", "Describe a personal experience", "B", "Author's Purpose",
+        (passage3, "The passage primarily serves to:", "Argue that traditional methods are superior", "Present findings from a recent study", "Compare two competing theories", "Describe a personal experience", "B", "Author's Purpose",
          "The passage focuses on presenting and discussing research findings.", 2),
-        ("The relationship between Passage 1 and Passage 2 can best be described as:", "Passage 2 challenges a claim made in Passage 1", "Passage 2 provides additional support for Passage 1", "They discuss entirely unrelated topics", "They reach the same conclusion using different methods", "A", "Cross-Text",
-         "In paired passages, the second often provides a contrasting perspective.", 3),
-        ("As used in line 15, 'cultivated' most nearly means:", "Deliberately developed", "Naturally occurring", "Quickly abandoned", "Carefully hidden", "A", "Words in Context",
+        (passage3, "As used in line 15, 'cultivated' most nearly means:", "Deliberately developed", "Naturally occurring", "Quickly abandoned", "Carefully hidden", "A", "Words in Context",
          "'Cultivated' in a metaphorical sense means deliberately grown or developed.", 2),
-        ("The author would most likely agree with which statement?", "More research is needed before drawing final conclusions", "The results are definitive and require no further study", "The study's methodology was flawed", "The findings contradict all previous research", "A", "Author's Perspective",
+        (passage3, "The author would most likely agree with which statement?", "More research is needed before drawing final conclusions", "The results are definitive and require no further study", "The study's methodology was flawed", "The findings contradict all previous research", "A", "Author's Perspective",
          "Authors of academic texts typically call for more research, maintaining a cautious stance.", 2),
-        ("The function of the third paragraph in relation to the rest of the passage is to:", "Introduce a complication to the main argument", "Summarize the passage", "Provide biographical information", "List counterexamples", "A", "Text Structure",
-         "Third paragraphs often introduce complexity or nuance to the main discussion.", 3),
-        ("Which best describes why the author uses the metaphor of a 'bridge' in paragraph 2?", "To illustrate the connection between two ideas", "To describe a physical structure", "To argue against progress", "To introduce a new character", "A", "Rhetorical Devices",
+        (passage1, "Which best describes why the author uses the metaphor of a 'bridge' in paragraph 2?", "To illustrate the connection between two ideas", "To describe a physical structure", "To argue against progress", "To introduce a new character", "A", "Rhetorical Devices",
          "The 'bridge' metaphor creates a visual connection between concepts.", 2),
-        ("In context, the phrase 'a double-edged sword' suggests that the technology:", "Has both positive and negative consequences", "Is primarily harmful", "Is extremely expensive", "Will soon become obsolete", "A", "Words in Context",
+        (passage3, "In context, the phrase 'a double-edged sword' suggests that the technology:", "Has both positive and negative consequences", "Is primarily harmful", "Is extremely expensive", "Will soon become obsolete", "A", "Words in Context",
          "'Double-edged sword' is an idiom meaning something that has both favorable and unfavorable consequences.", 2),
     ];
 
-    for (q, a, b, c, d, ans, sub, exp, diff) in questions {
-        db::insert_question(pool, "english", "Craft and Structure", sub, "SAT-Stream", diff, q, a, b, c, d, ans, exp).await?;
+    for (passage, q, a, b, c, d, ans, sub, exp, diff) in questions {
+        db::insert_question(pool, "english", "Craft and Structure", sub, "SAT-Stream", diff, passage, q, a, b, c, d, ans, exp).await?;
     }
     Ok(())
 }
 
 // ===== ENGLISH: INFORMATION AND IDEAS =====
 async fn seed_english_information(pool: &SqlitePool) -> Result<()> {
+    let passage_info = "The relationship between urban green spaces and public health has attracted \
+                        considerable attention in recent years. A landmark study conducted across \
+                        15 major cities found that residents living within 300 meters of a park or \
+                        green corridor reported 25% fewer symptoms of anxiety and depression compared \
+                        to those without nearby access to nature. These findings suggest that urban \
+                        green spaces significantly improve public health outcomes, particularly in \
+                        densely populated neighborhoods where residents have limited opportunities \
+                        for outdoor recreation. The researchers controlled for socioeconomic variables, \
+                        including income level, education, and access to healthcare, strengthening \
+                        the evidence that proximity to nature itself—rather than associated wealth—\
+                        drives these benefits.";
+
+    let passage_reading = "The notion that reading fiction makes us more empathetic has moved from \
+                           literary theory to empirical science. In a five-year study at a major \
+                           university, participants who read literary fiction for at least 30 minutes \
+                           daily scored significantly higher on emotional recognition tests than \
+                           non-readers. The mechanism appears to involve the reader's engagement with \
+                           characters' internal states—a process that exercises the same neural pathways \
+                           used in real-world social cognition. Participants were college students \
+                           from diverse backgrounds, and the books were selected randomly from curated \
+                           lists to minimize selection bias.";
+
+    let passage_science = "In 2019, Dr. Amara Okafor's team at the Coastal Research Institute published \
+                           findings that challenged conventional wisdom about marine ecosystems. Contrary \
+                           to the prevailing assumption that deep-sea environments remain stable and \
+                           unchanging, the researchers documented rapid shifts in species composition at \
+                           depths exceeding 2,000 meters. These new discoveries in deep-sea biology are \
+                           challenging long-held assumptions about the resilience of abyssal communities. \
+                           Preliminary but significant, the study employed remotely operated vehicles \
+                           equipped with high-resolution cameras, revealing previously unknown behaviors \
+                           in organisms once thought to be sessile.";
+
+    let passage_agri = "Dr. Martinez's work on precision agriculture demonstrates how theoretical \
+                        research translates into practical outcomes. By combining satellite imagery \
+                        with soil sensor data, her team developed a system that increases crop yield \
+                        while using less water—a primary advantage in drought-prone regions. The \
+                        results, which contradicted the researchers' initial hypothesis that water \
+                        savings would reduce yields, surprised even the study's advocates.";
+
     let questions = vec![
-        ("Based on the passage, the author's central claim is that:", "Urban green spaces significantly improve public health outcomes", "Parks are too expensive to maintain", "Rural areas are healthier than cities", "Exercise has no effect on mental health", "A", "Central Ideas",
+        (passage_info, "Based on the passage, the author's central claim is that:", "Urban green spaces significantly improve public health outcomes", "Parks are too expensive to maintain", "Rural areas are healthier than cities", "Exercise has no effect on mental health", "A", "Central Ideas",
          "In passages about urban green spaces, the central claim typically emphasizes health benefits.", 2),
-        ("Which detail from the passage best supports the author's claim that reading improves empathy?", "Participants who read fiction scored higher on emotional recognition tests", "The study was conducted over five years", "Most participants were college students", "The books were selected randomly", "A", "Supporting Details",
+        (passage_reading, "Which detail from the passage best supports the author's claim that reading improves empathy?", "Participants who read fiction scored higher on emotional recognition tests", "The study was conducted over five years", "Most participants were college students", "The books were selected randomly", "A", "Supporting Details",
          "Empirical test results directly support the claim about reading and empathy.", 2),
-        ("According to the graph, in which year did carbon emissions decrease the most?", "2020", "2019", "2018", "2021", "A", "Quantitative Evidence",
-         "The graph shows the steepest decline in 2020 (likely due to pandemic-related reductions).", 2),
-        ("The passage suggests that the new treatment is:", "Promising but requires further testing", "Immediately ready for widespread use", "Less effective than existing treatments", "Too expensive for most patients", "A", "Inferences",
-         "Scientific passages about new treatments typically express cautious optimism.", 2),
-        ("Which finding from the study would most weaken the author's argument?", "A study showing no correlation between the variables", "Additional data supporting the thesis", "A quote from a leading expert", "A historical example", "A", "Command of Evidence",
+        (passage_info, "The passage suggests that the relationship between green spaces and health is:", "Primarily explained by income differences", "Strongest in wealthy neighborhoods", "Independent of socioeconomic factors", "Weaker than previously thought", "C", "Inferences",
+         "The passage explicitly states researchers controlled for socioeconomic variables, suggesting the effect is independent of wealth.", 2),
+        (passage_science, "Which finding from the study would most weaken the author's argument?", "A study showing no change in deep-sea species composition", "Additional data supporting the thesis", "A quote from a leading expert", "A historical example", "A", "Command of Evidence",
          "Contradictory data directly weakens an argument.", 3),
-        ("The data in the table best supports which conclusion?", "Students who slept 8+ hours performed significantly better on tests", "Sleep has no effect on academic performance", "Younger students need less sleep", "Test difficulty varied by school", "A", "Quantitative Evidence",
-         "Tables showing sleep-performance data typically demonstrate positive correlation.", 2),
-        ("Based on the passage, the researcher most likely believes that:", "Collaboration between disciplines leads to better outcomes", "Individual work is always more productive", "Science and art are incompatible", "Funding is the primary barrier to progress", "A", "Author's Purpose",
+        (passage_science, "Based on the passage, the researcher most likely believes that:", "Collaboration between disciplines leads to better outcomes", "Individual work is always more productive", "Science and art are incompatible", "Funding is the primary barrier to progress", "A", "Author's Purpose",
          "Passages discussing interdisciplinary research emphasize the value of collaboration.", 2),
-        ("Which choice provides the strongest evidence for the answer to the previous question?", "Lines 23-27, which describe the combined methodology", "Lines 1-3, which introduce the topic", "Lines 45-48, which discuss funding", "Lines 30-32, which mention equipment", "A", "Command of Evidence",
-         "The lines describing the combined methodology directly support the claim about collaboration.", 2),
-        ("The main idea of the passage is best summarized as:", "New discoveries in deep-sea biology are challenging long-held assumptions", "Deep-sea exploration is too dangerous", "Marine biology has not advanced in decades", "Ocean pollution has destroyed all deep-sea life", "A", "Central Ideas",
+        (passage_science, "The main idea of the passage is best summarized as:", "New discoveries in deep-sea biology are challenging long-held assumptions", "Deep-sea exploration is too dangerous", "Marine biology has not advanced in decades", "Ocean pollution has destroyed all deep-sea life", "A", "Central Ideas",
          "Passages about scientific discovery typically focus on how new findings challenge existing understanding.", 2),
-        ("According to the passage, the primary advantage of the new agricultural technique is:", "It increases crop yield while using less water", "It eliminates the need for sunlight", "It works only in tropical climates", "It requires expensive equipment", "A", "Details",
+        (passage_agri, "According to the passage, the primary advantage of the new agricultural technique is:", "It increases crop yield while using less water", "It eliminates the need for sunlight", "It works only in tropical climates", "It requires expensive equipment", "A", "Details",
          "Agricultural innovations are typically valued for efficiency improvements.", 2),
-        ("The study's findings, as described in the passage, are best characterized as:", "Preliminary but significant", "Conclusive and comprehensive", "Contradictory and confusing", "Irrelevant to the field", "A", "Inference",
+        (passage_science, "The study's findings, as described in the passage, are best characterized as:", "Preliminary but significant", "Conclusive and comprehensive", "Contradictory and confusing", "Irrelevant to the field", "A", "Inference",
          "Most passages present study findings as significant yet needing further research.", 2),
-        ("Which statement about the data in the chart is accurate?", "The trend line shows a consistent increase over the period", "The data shows no clear pattern", "The values decrease sharply after 2015", "The highest point was in 2005", "A", "Data Interpretation",
-         "When charts show upward trends, the accurate description is 'consistent increase'.", 2),
-        ("The author includes the anecdote about Dr. Martinez primarily to:", "Illustrate a real-world application of the theory", "Criticize Dr. Martinez's research", "Introduce a new argument", "Humor the reader", "A", "Text Purpose",
+        (passage_agri, "The author includes the anecdote about Dr. Martinez primarily to:", "Illustrate a real-world application of the theory", "Criticize Dr. Martinez's research", "Introduce a new argument", "Humor the reader", "A", "Text Purpose",
          "Anecdotes about researchers typically illustrate or exemplify the main point.", 2),
-        ("Based on the passage, the experiment's results were surprising because:", "They contradicted the researchers' initial hypothesis", "They confirmed what everyone expected", "The sample size was too small", "The equipment malfunctioned", "A", "Inference",
+        (passage_agri, "Based on the passage, the experiment's results were surprising because:", "They contradicted the researchers' initial hypothesis", "They confirmed what everyone expected", "The sample size was too small", "The equipment malfunctioned", "A", "Inference",
          "Surprising results, by definition, contradict expectations/hypotheses.", 2),
-        ("The passage implies that the decline in bee populations:", "Could have cascading effects on food production", "Is not a significant concern", "Has already been fully resolved", "Only affects tropical regions", "A", "Inference",
-         "Passages about declining bee populations emphasize their role in pollination and food systems.", 2),
+        (passage_reading, "The passage implies that reading fiction:", "Strengthens the same brain pathways used in social interaction", "Has no measurable effect on empathy", "Only benefits college students", "Is less effective than meditation", "A", "Inference",
+         "The passage states reading exercises the same neural pathways used in real-world social cognition.", 2),
     ];
 
-    for (q, a, b, c, d, ans, sub, exp, diff) in questions {
-        db::insert_question(pool, "english", "Information and Ideas", sub, "SAT-Stream", diff, q, a, b, c, d, ans, exp).await?;
+    for (passage, q, a, b, c, d, ans, sub, exp, diff) in questions {
+        db::insert_question(pool, "english", "Information and Ideas", sub, "SAT-Stream", diff, passage, q, a, b, c, d, ans, exp).await?;
     }
     Ok(())
 }
@@ -303,7 +360,7 @@ async fn seed_english_conventions(pool: &SqlitePool) -> Result<()> {
     ];
 
     for (q, a, b, c, d, ans, sub, exp, diff) in questions {
-        db::insert_question(pool, "english", "Standard English Conventions", sub, "SAT-Stream", diff, q, a, b, c, d, ans, exp).await?;
+        db::insert_question(pool, "english", "Standard English Conventions", sub, "SAT-Stream", diff, "", q, a, b, c, d, ans, exp).await?;
     }
     Ok(())
 }
@@ -344,7 +401,7 @@ async fn seed_english_expression(pool: &SqlitePool) -> Result<()> {
     ];
 
     for (q, a, b, c, d, ans, sub, exp, diff) in questions {
-        db::insert_question(pool, "english", "Expression of Ideas", sub, "SAT-Stream", diff, q, a, b, c, d, ans, exp).await?;
+        db::insert_question(pool, "english", "Expression of Ideas", sub, "SAT-Stream", diff, "", q, a, b, c, d, ans, exp).await?;
     }
     Ok(())
 }
